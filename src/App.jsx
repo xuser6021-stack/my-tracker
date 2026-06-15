@@ -1555,7 +1555,7 @@ function BackupExportSection({ data, persist, showToast }) {
         
         <label style={{
           background: C.yellow, color: C.ink, padding: "10px 0",
-          border: `2px solid ${C.ink}`, fontFamily: F, fontSize: 11,
+          border: `2px solid ${C.ink}`, fontFamily: F, fontSize: 12,
           textTransform: "uppercase", cursor: "pointer", display: "block",
           textAlign: "center", boxShadow: HS(2)
         }}>
