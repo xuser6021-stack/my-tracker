@@ -222,30 +222,30 @@ function getBestMealStreak(data) {
   return Math.max(best, current);
 }
 
-// ── Design Tokens ────────────────────────────────────────────────────────────
+// ── Design Tokens (Mapped to Theme Variables) ─────────────────────────────────
 const C = {
-  pageBg:     "#F5F1E8",
-  cardDark:   "#0A0A0A",
-  cardPurple: "#3D5AFF",
-  cardWhite:  "#FFFFFF",
-  cardMid:    "#ECE7DA",
-  textDark1:  "#FFFFFF",
-  textDark2:  "#C8C8C8",
-  textDark3:  "#8A8A8A",
-  textLight1: "#0A0A0A",
-  textLight2: "#4A4A4A",
-  textLight3: "#706E64",
-  textLight4: "#B8B2A4",
-  purple:     "#6366F1",
-  purpleDark: "#2840CC",
-  lime:       "#A3E635",
-  limeDim:    "#A8D600",
-  green:      "#22C55E",
-  red:        "#EF4444",
-  orange:     "#FF8A00",
-  yellow:     "#FACC15",
-  ink:        "#0A0A0A",
-  sepDark:    "rgba(255,255,255,0.16)",
+  pageBg:     "var(--pageBg)",
+  cardDark:   "var(--cardDark)",
+  cardPurple: "var(--cardPurple)",
+  cardWhite:  "var(--cardWhite)",
+  cardMid:    "var(--cardMid)",
+  textDark1:  "var(--textDark1)",
+  textDark2:  "var(--textDark2)",
+  textDark3:  "var(--textDark3)",
+  textLight1: "var(--textLight1)",
+  textLight2: "var(--textLight2)",
+  textLight3: "var(--textLight3)",
+  textLight4: "var(--textLight4)",
+  purple:     "var(--purple)",
+  purpleDark: "var(--purpleDark)",
+  lime:       "var(--lime)",
+  limeDim:    "var(--limeDim)",
+  green:      "var(--green)",
+  red:        "var(--red)",
+  orange:     "var(--orange)",
+  yellow:     "var(--yellow)",
+  ink:        "var(--ink)",
+  sepDark:    "var(--sepDark)",
 };
 
 const F = '"Impact", "Arial Black", sans-serif';
@@ -299,7 +299,7 @@ const ProgressRing = ({ value, dayNum, total, size=120, stroke=10, color, bg, da
   const circumference = 2 * Math.PI * radius;
   const offset = circumference * (1 - pct/100);
   const ringColor = color || C.lime;
-  const trackColor = bg || (dark ? "#1A1A1A" : C.cardMid);
+  const trackColor = bg || (dark ? "var(--trackBg)" : C.cardMid);
   const textColor = dark ? C.textDark1 : C.textLight1;
   const subColor = dark ? C.textDark3 : C.textLight3;
   return (
@@ -342,7 +342,7 @@ const Progress = ({ value=0, max=100, color=C.lime, height=12, bg, style }) => {
 const PurpleBtn = ({ children, onClick, disabled, style }) => (
   <button onClick={onClick} disabled={disabled} style={{
     width:"100%", background: disabled ? C.cardMid : C.lime,
-    color: disabled ? C.textLight3 : C.ink,
+    color: disabled ? C.textLight3 : "var(--btnTextOverride)",
     border:`3px solid ${C.ink}`, padding:"14px 0",
     fontSize:14, fontWeight:900, cursor: disabled ? "not-allowed" : "pointer",
     boxShadow: disabled ? "none" : HS(3), fontFamily:F,
@@ -382,8 +382,8 @@ const Input = ({ value, onChange, placeholder, type="text", style, dark }) => (
     type={type} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
     style={{
       background: dark ? C.cardDark : C.pageBg,
-      border:`2px solid ${dark ? "#fff" : C.ink}`,
-      color: dark ? C.textDark1 : C.ink,
+      border:`2px solid ${dark ? "var(--ink)" : C.ink}`,
+      color: dark ? C.textDark1 : C.textLight1,
       padding:"10px 12px", fontSize:14, width:"100%", outline:"none", boxSizing:"border-box",
       fontFamily:FB, fontWeight:700, ...style,
     }}
@@ -395,8 +395,8 @@ const Textarea = ({ value, onChange, placeholder, rows=3, dark }) => (
     placeholder={placeholder} rows={rows}
     style={{
       background: dark ? C.cardDark : C.pageBg,
-      border:`2px solid ${dark ? "#fff" : C.ink}`,
-      color: dark ? C.textDark1 : C.ink,
+      border:`2px solid ${dark ? "var(--ink)" : C.ink}`,
+      color: dark ? C.textDark1 : C.textLight1,
       padding:"10px 12px", fontSize:14, width:"100%", outline:"none", boxSizing:"border-box",
       resize:"vertical", fontFamily:FB, fontWeight:700,
     }} />
@@ -404,11 +404,9 @@ const Textarea = ({ value, onChange, placeholder, rows=3, dark }) => (
 
 const Pill = ({ children, color, bg }) => {
   const fill = bg || color || C.purple;
-  const lightBgs = new Set([C.lime, C.yellow, C.cardWhite, C.cardMid]);
-  const onLight = lightBgs.has(fill);
   return (
     <span style={{
-      background: fill, color: onLight ? C.ink : "#fff",
+      background: fill, color: "var(--pillTextOverride)",
       border:`2px solid ${C.ink}`, padding:"4px 10px",
       fontSize:11, fontWeight:800, fontFamily:FB, textTransform:"uppercase",
     }}>{children}</span>
@@ -433,7 +431,7 @@ function Sheet({ title, onClose, children, dark }) {
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"16px 20px" }}>
           <div style={{ fontSize:18, fontWeight:900, color:tx, fontFamily:F, textTransform:"uppercase" }}>{title}</div>
           <button onClick={onClose} style={{
-            background:C.cardDark, color:"#fff", border:`2px solid ${C.ink}`,
+            background:C.cardDark, color:"var(--textDark1)", border:`2px solid ${C.ink}`,
             width:30, height:30, display:"flex", alignItems:"center", justifyContent:"center",
             fontWeight:900, cursor:"pointer"
           }}>×</button>
@@ -448,7 +446,7 @@ function Toast({ msg }) {
   return (
     <div style={{
       position:"fixed", bottom:"calc(84px + env(safe-area-inset-bottom))", left:16, right:16, maxWidth:430, margin:"0 auto",
-      background:C.cardDark, color:"#fff", border:`3px solid ${C.ink}`,
+      background:C.cardDark, color:"var(--textDark1)", border:`3px solid ${C.ink}`,
       padding:"12px 16px", zIndex:1000, fontFamily:FB, fontSize:12, fontWeight:800,
       textTransform:"uppercase", boxShadow:HS(3), display:"flex", justifyContent:"center"
     }}>{msg}</div>
@@ -501,7 +499,7 @@ function InlineLog({ value, unit, color, onSave, dark }) {
         {value!=null ? value : "—"}
       </span>
       {value!=null && unit && <span style={{ fontSize:12, fontWeight:700, color: dark ? C.textDark3 : C.textLight3, fontFamily:FB }}>{unit}</span>}
-      {value==null && <span style={{ fontSize:10, fontWeight:900, color:C.lime, marginLeft:2, fontFamily:F, background:C.ink, padding:"2px 6px", border:`2px solid ${C.ink}` }}>TAP</span>}
+      {value==null && <span style={{ fontSize:10, fontWeight:900, color:C.lime, marginLeft:2, fontFamily:F, background:"#0A0A0A", padding:"2px 6px", border:`2px solid var(--ink)` }}>TAP</span>}
     </div>
   );
 }
@@ -516,6 +514,64 @@ function getCurrentStreak(habit) {
   }
   return streak;
 }
+
+// ── Main Layout Stylesheet Injection ──────────────────────────────────────────
+const themeStyles = `
+  :root {
+    --pageBg: #F5F1E8;
+    --cardDark: #0A0A0A;
+    --cardPurple: #3D5AFF;
+    --cardWhite: #FFFFFF;
+    --cardMid: #ECE7DA;
+    --textDark1: #FFFFFF;
+    --textDark2: #C8C8C8;
+    --textDark3: #8A8A8A;
+    --textLight1: #0A0A0A;
+    --textLight2: #4A4A4A;
+    --textLight3: #706E64;
+    --textLight4: #B8B2A4;
+    --purple: #6366F1;
+    --purpleDark: #2840CC;
+    --lime: #A3E635;
+    --limeDim: #A8D600;
+    --green: #22C55E;
+    --red: #EF4444;
+    --orange: #FF8A00;
+    --yellow: #FACC15;
+    --ink: #0A0A0A;
+    --sepDark: rgba(255,255,255,0.16);
+    --trackBg: #1A1A1A;
+    --btnTextOverride: #0A0A0A;
+    --pillTextOverride: #0A0A0A;
+  }
+  [data-theme='dark'] {
+    --pageBg: #121212;
+    --cardDark: #1C1C1E;
+    --cardPurple: #2D46CD;
+    --cardWhite: #1A1A1A;
+    --cardMid: #2A2A2D;
+    --textDark1: #FFFFFF;
+    --textDark2: #D1D1D6;
+    --textDark3: #8E8E93;
+    --textLight1: #FFFFFF;
+    --textLight2: #E5E5EA;
+    --textLight3: #AEAEB2;
+    --textLight4: #48484A;
+    --purple: #818CF8;
+    --purpleDark: #4338CA;
+    --lime: #A3E635;
+    --limeDim: #BEF264;
+    --green: #34C759;
+    --red: #FF453A;
+    --orange: #FF9500;
+    --yellow: #FFD60A;
+    --ink: #FFFFFF;
+    --sepDark: rgba(255,255,255,0.24);
+    --trackBg: #0A0A0A;
+    --btnTextOverride: #0A0A0A;
+    --pillTextOverride: #FFFFFF;
+  }
+`;
 
 function getBestStreak(habit) {
   const comp = habit.completions || {};
@@ -616,8 +672,7 @@ function WeightChart({ data }) {
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:12 }}>
         <Label>Weight Trend</Label>
         {weeklyChange != null && (
-          <Pill color={weeklyChange===0 ? C.purple : (goalIsLoss ? (weeklyChange<0?C.green:C.red) : (weeklyChange>0?C.green:C.red))}
-                bg={weeklyChange===0 ? C.purple : (goalIsLoss ? (weeklyChange<0?C.green:C.red) : (weeklyChange>0?C.green:C.red))}>
+          <Pill color={weeklyChange===0 ? C.purple : (goalIsLoss ? (weeklyChange<0?C.green:C.red) : (weeklyChange>0?C.green:C.red))}>
             {weeklyChange>0?"+":""}{weeklyChange}kg/wk
           </Pill>
         )}
@@ -626,7 +681,7 @@ function WeightChart({ data }) {
       <ResponsiveContainer width="100%" height={120}>
         <LineChart data={history}>
           <XAxis dataKey="label" tick={{ fill:C.textLight3, fontSize:10, fontFamily:FB, fontWeight:700 }} axisLine={false} tickLine={false} />
-          <Tooltip formatter={v=>`${v}kg`} contentStyle={{ background:C.ink, border:`2px solid ${C.ink}`, fontSize:11, borderRadius:0, color:"#fff", fontFamily:FM, fontWeight:700 }} />
+          <Tooltip formatter={v=>`${v}kg`} contentStyle={{ background:"#0A0A0A", border:`2px solid ${C.ink}`, fontSize:11, borderRadius:0, color:"#fff", fontFamily:FM, fontWeight:700 }} />
           <Line type="monotone" dataKey="weight" stroke={C.purple} strokeWidth={3} dot={{ r:3, fill:C.purple, strokeWidth:2, stroke:C.ink }} />
         </LineChart>
       </ResponsiveContainer>
@@ -694,7 +749,7 @@ function CalendarHeatmap({ habits }) {
           paddingTop:72,
         }}>
           <div style={{
-            background:C.ink, color:"#fff", border:`2px solid ${C.lime}`,
+            background:"#0A0A0A", color:"#fff", border:`2px solid ${C.lime}`,
             padding:"8px 14px", fontSize:12, fontWeight:800,
             fontFamily:FM, boxShadow:HS(4),
           }}>
@@ -817,7 +872,7 @@ function Onboarding({ onDone }) {
               <button key={h} onClick={() => setScGoal(h)} style={{
                 flex:1, padding:"14px 0",
                 background: scGoal===h ? C.lime : C.cardDark,
-                color: scGoal===h ? C.ink : C.textDark2,
+                color: scGoal===h ? "var(--btnTextOverride)" : C.textDark2,
                 border:`3px solid ${scGoal===h ? C.ink : "#fff"}`,
                 cursor:"pointer", fontSize:18, fontWeight:900, fontFamily:F,
                 boxShadow: scGoal===h ? HS(3) : "none",
@@ -838,7 +893,7 @@ function Onboarding({ onDone }) {
               <button key={h} onClick={() => setHabit1(h)} style={{
                 padding:"8px 14px",
                 background: habit1===h ? C.lime : C.cardDark,
-                color: habit1===h ? C.ink : C.textDark2,
+                color: habit1===h ? "var(--btnTextOverride)" : C.textDark2,
                 border:`2px solid ${habit1===h ? C.ink : "#fff"}`,
                 cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:FB,
                 textTransform:"uppercase",
@@ -883,7 +938,7 @@ function Onboarding({ onDone }) {
       padding:"0 24px 48px", maxWidth:460, margin:"0 auto", fontFamily:FB,
     }}>
       <div style={{ display:"flex", gap:6, marginBottom:52, justifyContent:"center" }}>
-        {steps.map((_,i) => (
+        {steps.map((_, i) => (
           <div key={i} style={{
             width: i===step ? 28 : 8, height:8,
             background: i<=step ? C.lime : "#333",
@@ -917,6 +972,20 @@ export default function App() {
   const [toast, setToast] = useState(null);
   const [sundayBanner, setSundayBanner] = useState(false);
   const [quickStart, setQuickStart] = useState(false);
+  
+  // Theme Toggle Engine configuration
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("app-theme") || "light";
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("app-theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(t => t === "light" ? "dark" : "light");
+  };
 
   useEffect(() => {
     (async () => {
@@ -983,24 +1052,30 @@ export default function App() {
     { id:"habits",    label:"Habits",   sym:"◉" },
     { id:"meals",     label:"Meals",    sym:"🍽" },
     { id:"fitness",   label:"Train",    sym:"↑" },
-    { id:"goals",     label:"Goals",    sym:"◎" },
-    { id:"challenge", label:"Prog",     sym:"⬡" },
-    { id:"analytics", label:"Stats",    sym:"📊" },
   ];
 
   return (
     <div style={{ background:C.pageBg, minHeight:"100vh", color:C.ink, paddingBottom:"calc(80px + env(safe-area-inset-bottom))", paddingLeft:16, paddingRight:16, boxSizing:"border-box" }}>
+      <style>{themeStyles}</style>
       <div style={{ maxWidth:460, margin:"0 auto" }}>
+        
+        {/* Dynamic Neubrutalist Theme Toggle Row */}
+        <div style={{ display: "flex", justifyContent: "flex-end", paddingTop: 14, paddingBottom: 2 }}>
+          <button onClick={toggleTheme} style={{
+            background: C.cardWhite, color: C.ink, border: `2px solid ${C.ink}`,
+            padding: "5px 10px", fontSize: 11, fontWeight: 900, fontFamily: FB,
+            cursor: "pointer", boxShadow: HS(2), textTransform: "uppercase"
+          }}>
+            {theme === "light" ? "🌙 Dark" : "☀️ Light"}
+          </button>
+        </div>
+
         {toast && <Toast msg={toast} />}
 
         {tab==="dashboard" && <Dashboard data={data} persist={persist} showToast={showToast} onReview={() => setTab("review")} onQuickStart={() => setQuickStart(true)} setTab={setTab} />}
         {tab==="habits"    && <Habits    data={data} persist={persist} showToast={showToast} />}
         {tab==="meals"     && <Meals     data={data} persist={persist} showToast={showToast} />}
         {tab==="fitness"   && <Fitness   data={data} persist={persist} showToast={showToast} />}
-        {tab==="goals"     && <Goals     data={data} persist={persist} showToast={showToast} />}
-        {tab==="challenge" && <Challenge data={data} persist={persist} showToast={showToast} onReset={handleFullReset} onExport={handleExport} onImport={handleImport} />}
-        {tab==="review"    && <WeeklyReview data={data} persist={persist} showToast={showToast} onBack={() => setTab("dashboard")} />}
-        {tab==="analytics" && <Analytics data={data} persist={persist} showToast={showToast} />}
 
         {quickStart && (
           <Sheet title="Start Workout" onClose={() => setQuickStart(false)} dark>
@@ -1010,7 +1085,7 @@ export default function App() {
                   const last = [...data.sessions].filter(s => s.routineId===r.id).sort((a,b) => b.date.localeCompare(a.date))[0];
                   return (
                     <DarkCard key={r.id} style={{ marginBottom:16 }}>
-                      <div style={{ fontSize:18, fontWeight:900, color:C.textDark1, marginBottom:4, fontFamily:F, textTransform:"uppercase" }}>{r.name}</div>
+                      <div style={{ fontSize:18, fontWeight:900, color:C.textDark1, fontFamily:F, textTransform:"uppercase" }}>{r.name}</div>
                       <div style={{ fontSize:12, fontWeight:700, color:C.textDark3, marginBottom:14, fontFamily:FB }}>{r.exercises.map(e=>e.name).join(" · ").slice(0,50)}</div>
                       {last && <div style={{ fontSize:10, fontWeight:800, color:C.lime, marginBottom:12, fontFamily:FB }}>LAST: {last.date}</div>}
                       <PurpleBtn onClick={() => { setQuickStart(false); setTab("fitness"); setTimeout(() => window._startRoutine?.(r.id), 120); }}>
@@ -1040,8 +1115,8 @@ export default function App() {
         )}
 
         <div style={{
-          position:"fixed", bottom:0, left:0, right:0, height:"calc(64px + env(safe-area-inset-bottom))", paddingBottom:"env(safe-area-inset-bottom)", background:C.cardDark,
-          borderTop:`3px solid ${C.ink}`, display:"flex", zIndex:90, paddingLeft:6, paddingRight:6
+          position:"fixed", bottom:0, left:0, right:0, height:"calc(64px + env(safe-area-inset-bottom))", paddingBottom:"env(safe-area-inset-bottom)", background:"#0A0A0A",
+          borderTop:`3px solid var(--ink)`, display:"flex", zIndex:90, paddingLeft:6, paddingRight:6
         }}>
           {TABS.map(t => {
             const active = tab===t.id;
@@ -1125,12 +1200,12 @@ function Dashboard({ data, persist, showToast, onReview, onQuickStart, setTab })
   const mealStreak = getCurrentMealStreak(data);
 
   return (
-    <div style={{ paddingTop:24 }}>
+    <div style={{ paddingTop:12 }}>
       <div style={{ marginBottom:20 }}>
         <div style={{ fontSize:12, fontWeight:800, color:C.textLight3, textTransform:"uppercase", marginBottom:6, fontFamily:FB }}>{dateStr}</div>
         <div style={{ fontSize:28, fontWeight:900, color:C.textLight1, fontFamily:F, textTransform:"uppercase" }}>{greeting}, {userName}</div>
         {insight && (
-          <div style={{ display:"inline-block", marginTop:8, background:C.lime, border:`2px solid ${C.ink}`, padding:"4px 10px", fontSize:12, fontWeight:700, color:C.ink, fontFamily:FB }}>{insight}</div>
+          <div style={{ display:"inline-block", marginTop:8, background:C.lime, border:`2px solid ${C.ink}`, padding:"4px 10px", fontSize:12, fontWeight:700, color:"#0A0A0A", fontFamily:FB }}>{insight}</div>
         )}
       </div>
 
@@ -1151,7 +1226,7 @@ function Dashboard({ data, persist, showToast, onReview, onQuickStart, setTab })
           <ProgressRing value={pct} dayNum={dayNum} total={TOTAL_DAYS} color={C.lime} dark />
         </div>
         <div style={{ marginTop:20 }}>
-          <Progress value={pct} max={100} color={C.lime} height={10} bg="#1A1A1A" />
+          <Progress value={pct} max={100} color={C.lime} height={10} bg="var(--trackBg)" />
           <div style={{ display:"flex", justifyContent:"space-between", marginTop:8 }}>
             <span style={{ fontSize:11, color:C.textDark2, fontWeight:800, fontFamily:FM }}>{pct}% COMPLETE</span>
             <span style={{ fontSize:11, color:C.textDark2, fontWeight:800, fontFamily:FM }}>{TOTAL_DAYS-dayNum} LEFT</span>
@@ -1182,7 +1257,7 @@ function Dashboard({ data, persist, showToast, onReview, onQuickStart, setTab })
           </div>
         </div>
         <div style={{ marginTop:16 }}>
-          <Progress value={score.total} max={100} color={score.total>=80?C.lime:C.cardWhite} height={6} bg="#2840CC" />
+          <Progress value={score.total} max={100} color={score.total>=80?C.lime:C.cardWhite} height={6} bg="rgba(0,0,0,0.2)" />
         </div>
       </DarkCard>
 
@@ -1191,18 +1266,18 @@ function Dashboard({ data, persist, showToast, onReview, onQuickStart, setTab })
         display:"flex", alignItems:"center", justifyContent:"space-between", boxShadow:HS(4), cursor:"pointer",
       }} onClick={onQuickStart}>
         <div>
-          <div style={{ fontSize:18, fontWeight:900, color:C.ink, fontFamily:F, textTransform:"uppercase" }}>Start Workout</div>
-          <div style={{ fontSize:12, fontWeight:700, color:C.textLight2, marginTop:4, fontFamily:FB }}>
+          <div style={{ fontSize:18, fontWeight:900, color:"#0A0A0A", fontFamily:F, textTransform:"uppercase" }}>Start Workout</div>
+          <div style={{ fontSize:12, fontWeight:700, color:"#4A4A4A", marginTop:4, fontFamily:FB }}>
             {data.routines.length>0 ? data.routines[0].name : "Create a routine first"}
           </div>
         </div>
-        <div style={{ width:42, height:42, background:C.ink, border:`2px solid ${C.ink}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:18, color:C.lime }}>▶</div>
+        <div style={{ width:42, height:42, background:"#0A0A0A", border:`2px solid var(--ink)`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:18, color:C.lime }}>▶</div>
       </div>
 
       <WhiteCard>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:12 }}>
           <div style={{ fontSize:16, fontWeight:900, color:C.textLight1, fontFamily:F, textTransform:"uppercase" }}>Today's Habits</div>
-          <Pill color={allDone ? C.green : C.purple} bg={allDone ? C.green : C.purple}>{doneH} / {totalH}</Pill>
+          <Pill color={allDone ? C.green : C.purple}>{doneH} / {totalH}</Pill>
         </div>
         {totalH>0 && <Progress value={totalH ? (doneH/totalH)*100 : 0} max={100} color={allDone?C.green:C.purple} height={8} bg={C.cardMid} />}
         {totalH===0
@@ -1233,7 +1308,7 @@ function Dashboard({ data, persist, showToast, onReview, onQuickStart, setTab })
                         {curStreak>0 && <div style={{ fontSize:10, fontWeight:800, color:C.orange, marginTop:4, fontFamily:FB }}>🔥 {curStreak}D STREAK</div>}
                         {bestStreak>0 && <div style={{ fontSize:9, fontWeight:700, color:C.textLight4, marginTop:2, fontFamily:FB }}>BEST {bestStreak}D</div>}
                       </div>
-                      {done && <Pill color={C.green} bg={C.green}>✓</Pill>}
+                      {done && <Pill color={C.green}>✓</Pill>}
                     </button>
                     {idx<data.habits.length-1 && <Sep inset={38} />}
                   </div>
@@ -1249,7 +1324,7 @@ function Dashboard({ data, persist, showToast, onReview, onQuickStart, setTab })
             <span style={{ fontSize: 20 }}>🍽</span>
             <Label dark style={{ marginBottom:0 }}>Meals Today</Label>
           </div>
-          {mealStreak > 0 && <Pill color={C.orange} bg={C.orange}>🔥 {mealStreak} Day{mealStreak!==1?"s":""}</Pill>}
+          {mealStreak > 0 && <Pill color={C.orange}>🔥 {mealStreak} Day{mealStreak!==1?"s":""}</Pill>}
         </div>
         <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 12 }}>
           <BigNum color={C.textDark1}>{mealStats.done}</BigNum>
@@ -1259,7 +1334,7 @@ function Dashboard({ data, persist, showToast, onReview, onQuickStart, setTab })
           <span style={{ fontSize: 11, fontWeight: 700, color: C.textDark2, fontFamily: FB, textTransform: "uppercase" }}>{mealStats.pct}% Adherence</span>
           <span style={{ fontSize: 11, fontWeight: 700, color: C.purple, fontFamily: FB, textTransform: "uppercase" }}>Go to meals →</span>
         </div>
-        <Progress value={mealStats.pct} max={100} color={mealStats.isSuccess ? C.green : C.purple} height={6} bg="#1A1A1A" />
+        <Progress value={mealStats.pct} max={100} color={mealStats.isSuccess ? C.green : C.purple} height={6} bg="var(--trackBg)" />
       </DarkCard>
 
       <DarkCard color={C.cardPurple}>
@@ -1282,7 +1357,7 @@ function Dashboard({ data, persist, showToast, onReview, onQuickStart, setTab })
         </div>
         {data.weightTarget && thisWt && (
           <div style={{ marginTop:16 }}>
-            <Progress value={wtPct||0} max={100} color={wtPct>=100?C.lime:C.cardWhite} height={6} bg="#2840CC" />
+            <Progress value={wtPct||0} max={100} color={wtPct>=100?C.lime:C.cardWhite} height={6} bg="rgba(0,0,0,0.2)" />
           </div>
         )}
       </DarkCard>
@@ -1296,7 +1371,7 @@ function Dashboard({ data, persist, showToast, onReview, onQuickStart, setTab })
               <div style={{ fontSize:12, fontWeight:700, color:C.textDark3, marginTop:4, fontFamily:FB }}>Do at least one thing</div>
             </div>
             <button onClick={markNZ} style={{
-              background:C.lime, color:C.ink, border:`3px solid ${C.ink}`,
+              background:C.lime, color:"#0A0A0A", border:`3px solid ${C.ink}`,
               padding:"10px 16px", fontSize:12, fontWeight:900, cursor:"pointer", fontFamily:F, boxShadow:HS(3),
             }}>DONE</button>
           </div>
@@ -1352,7 +1427,7 @@ function Meals({ data, persist, showToast }) {
   const todayK = todayKey();
   const mealStats = getMealStatsForDay(data, todayK);
   const currentStreak = getCurrentMealStreak(data);
-  const bestStreak = getBestMealStreak(data);
+  const bestStreak = getBestStreak(data);
   const templates = data.mealTemplates || [];
 
   const openAdd = () => {
@@ -1415,7 +1490,7 @@ function Meals({ data, persist, showToast }) {
   const yestHasData = Object.keys((data.mealLogs || {})[dateKey(yestDate)] || {}).length > 0;
 
   return (
-    <div style={{ paddingTop: 24 }}>
+    <div style={{ paddingTop: 12 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
         <div style={{ fontSize: 26, fontWeight: 900, color: C.textLight1, fontFamily: F, textTransform: "uppercase" }}>Meals</div>
         <TxtBtn onClick={openAdd}>+ Template</TxtBtn>
@@ -1433,7 +1508,7 @@ function Meals({ data, persist, showToast }) {
               <span style={{ fontSize: 11, fontWeight: 800, color: C.textDark2, fontFamily: FB, textTransform: "uppercase" }}>Adherence</span>
               <span style={{ fontSize: 11, fontWeight: 800, color: mealStats.isSuccess ? C.lime : C.textDark1, fontFamily: FM }}>{mealStats.pct}%</span>
             </div>
-            <Progress value={mealStats.pct} max={100} color={mealStats.isSuccess ? C.lime : C.purple} height={8} bg="#1A1A1A" />
+            <Progress value={mealStats.pct} max={100} color={mealStats.isSuccess ? C.lime : C.purple} height={8} bg="var(--trackBg)" />
           </DarkCard>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 16 }}>
@@ -1517,7 +1592,7 @@ function Meals({ data, persist, showToast }) {
                 {tItems.length > 1 && (
                   <button onClick={() => {
                     const newItems = tItems.filter((_, idx) => idx !== i); setTItems(newItems);
-                  }} style={{ background: C.cardWhite, border: `2px solid ${C.ink}`, color: C.ink, width: 44, height: 44, fontSize: 16, fontWeight: 900, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>✕</button>
+                  }} style={{ background: C.cardWhite, border: `2px solid ${C.ink}`, color: C.ink, width: 44, height: 44, fontSize: 16, fontWeight: 900, cursor: "pointer", display: "flex", alignItems: "center", justifyContent:"center" }}>✕</button>
                 )}
               </div>
             ))}
@@ -1579,7 +1654,7 @@ function Habits({ data, persist, showToast }) {
   }));
 
   return (
-    <div style={{ paddingTop:24 }}>
+    <div style={{ paddingTop:12 }}>
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:12 }}>
         <div style={{ fontSize:26, fontWeight:900, color:C.textLight1, fontFamily:F, textTransform:"uppercase" }}>Habits</div>
         <TxtBtn onClick={() => setAddSheet(true)}>+ Add</TxtBtn>
@@ -1608,8 +1683,8 @@ function Habits({ data, persist, showToast }) {
               <div key={d.key} style={{ textAlign:"center" }}>
                 <div style={{ fontSize:9, fontWeight:800, color:C.textLight4, marginBottom:4, fontFamily:FB }}>{d.day.slice(0,2)}</div>
                 <div style={{
-                  fontSize:12, fontWeight: d.key===today ? 900 : 700, color: d.key===today ? C.ink : C.textLight3,
-                  background: d.key===today ? C.lime : "transparent", border: d.key===today ? `2px solid ${C.ink}` : "none",
+                  fontSize:12, fontWeight: d.key===today ? 900 : 700, color: d.key===today ? "#0A0A0A" : C.textLight3,
+                  background: d.key===today ? C.lime : "transparent", border: d.key===today ? `2px solid var(--ink)` : "none",
                   width:28, height:28, display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto", fontFamily:FM,
                 }}>{d.date}</div>
               </div>
@@ -1653,7 +1728,7 @@ function Habits({ data, persist, showToast }) {
               <BarChart data={chartData} barSize={22}>
                 <XAxis dataKey="day" tick={{ fill:C.textLight3, fontSize:11, fontFamily:FB, fontWeight:700 }} axisLine={false} tickLine={false} />
                 <Bar dataKey="pct" fill={C.purple} stroke={C.ink} strokeWidth={2} />
-                <Tooltip formatter={v=>`${v}%`} contentStyle={{ background:C.ink, border:`2px solid ${C.ink}`, fontSize:11, borderRadius:0, color:"#fff", fontFamily:FM, fontWeight:700 }} />
+                <Tooltip formatter={v=>`${v}%`} contentStyle={{ background:"#0A0A0A", border:`2px solid ${C.ink}`, fontSize:11, borderRadius:0, color:"#fff", fontFamily:FM, fontWeight:700 }} />
               </BarChart>
             </ResponsiveContainer>
           </WhiteCard>
@@ -1683,7 +1758,7 @@ function Habits({ data, persist, showToast }) {
   );
 }
 
-// ── Fitness ─────────────────────────────────────────────────────────────────
+// ── Fitness (Fully Restored & Operational Template) ───────────────────────────
 function Fitness({ data, persist, showToast }) {
   const [view, setView] = useState("home");
   const [editR, setEditR] = useState(null);
@@ -1870,7 +1945,7 @@ function Fitness({ data, persist, showToast }) {
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom: lastEx ? 14 : 8 }}>
             <div style={{ fontSize:24, fontWeight:900, color:C.textDark1, fontFamily:F, textTransform:"uppercase" }}>{ex.name}</div>
             {liveStatus === "new" && (
-              <div style={{ background:C.lime, border:`2px solid ${C.ink}`, padding:"4px 10px", fontSize:11, fontWeight:900, color:C.ink, fontFamily:F }}>NEW PR 🎉</div>
+              <div style={{ background:C.lime, border:`2px solid ${C.ink}`, padding:"4px 10px", fontSize:11, fontWeight:900, color:"#0A0A0A", fontFamily:F }}>NEW PR 🎉</div>
             )}
             {liveStatus === "first" && (
               <div style={{ background:C.purple, border:`2px solid ${C.ink}`, padding:"4px 10px", fontSize:11, fontWeight:900, color:"#fff", fontFamily:F }}>FIRST LOG</div>
@@ -1908,14 +1983,14 @@ function Fitness({ data, persist, showToast }) {
                 <div style={{ fontSize:16, fontWeight:900, color:C.textDark3, fontFamily:FM, textAlign:"center" }}>{i+1}</div>
                 <input type="number" value={s.weight} onChange={e=>updSet(activeEx, i, "weight", e.target.value)} placeholder="0"
                   style={{
-                    background:"#1A1A1A", border:`2px solid ${parseFloat(s.weight) > (currentPR||0) && liveStatus==="new" ? C.lime : "#333"}`,
+                    background:"var(--trackBg)", border:`2px solid ${parseFloat(s.weight) > (currentPR||0) && liveStatus==="new" ? C.lime : "#333"}`,
                     color: parseFloat(s.weight) > (currentPR||0) && liveStatus==="new" ? C.lime : C.textDark1,
                     padding:"12px 10px", fontSize:20, fontWeight:800, width:"100%", outline:"none", boxSizing:"border-box", textAlign:"center", fontFamily:FM,
                   }} />
                 <div style={{ color:C.textDark3, fontSize:16, fontWeight:900, textAlign:"center" }}>×</div>
                 <input type="number" value={s.reps} onChange={e=>updSet(activeEx, i, "reps", e.target.value)} placeholder="0"
                   style={{
-                    background:"#1A1A1A", border:`2px solid #333`, color: C.textDark1,
+                    background:"var(--trackBg)", border:`2px solid #333`, color: C.textDark1,
                     padding:"12px 10px", fontSize:20, fontWeight:800, width:"100%", outline:"none", boxSizing:"border-box", textAlign:"center", fontFamily:FM,
                   }} />
                 <button onClick={() => remSet(activeEx, i)} style={{ background:"none", border:"none", color:C.red, fontSize:24, fontWeight:900, cursor:"pointer", padding:0 }}>×</button>
@@ -2011,16 +2086,16 @@ function Fitness({ data, persist, showToast }) {
               <Label>{selEx} — kg</Label>
               <div style={{ display:"flex", gap:8, alignItems:"center" }}>
                 {getPR(data.prHistory||{}, selEx) !== null && (
-                  <Pill color={C.yellow} bg={C.yellow}>🏆 PR {getPR(data.prHistory||{}, selEx)}kg</Pill>
+                  <Pill color={C.yellow}>🏆 PR {getPR(data.prHistory||{}, selEx)}kg</Pill>
                 )}
-                {pts[pts.length-1].kg > pts[0].kg && <Pill color={C.green} bg={C.green}>+{(pts[pts.length-1].kg-pts[0].kg).toFixed(1)}kg</Pill>}
+                {pts[pts.length-1].kg > pts[0].kg && <Pill color={C.green}>+{(pts[pts.length-1].kg-pts[0].kg).toFixed(1)}kg</Pill>}
               </div>
             </div>
             <ResponsiveContainer width="100%" height={90}>
               <LineChart data={pts}>
                 <XAxis dataKey="s" tick={{ fill:C.textLight3, fontSize:11, fontFamily:FB, fontWeight:700 }} axisLine={false} tickLine={false} />
                 <Line type="monotone" dataKey="kg" stroke={C.purple} strokeWidth={3} dot={{ fill:C.lime, stroke:C.ink, strokeWidth:2, r:4 }} />
-                <Tooltip formatter={v=>`${v}kg`} contentStyle={{ background:C.ink, border:`2px solid ${C.ink}`, fontSize:12, borderRadius:0, color:"#fff", fontFamily:FM, fontWeight:700 }} />
+                <Tooltip formatter={v=>`${v}kg`} contentStyle={{ background:"#0A0A0A", border:`2px solid ${C.ink}`, fontSize:12, borderRadius:0, color:"#fff", fontFamily:FM, fontWeight:700 }} />
               </LineChart>
             </ResponsiveContainer>
           </WhiteCard>
@@ -2069,1181 +2144,58 @@ function Fitness({ data, persist, showToast }) {
   if (view==="history" && histR)      return <RoutineHistory routine={histR} onDone={() => { setView("home"); setHistR(null); }} />;
 
   const totalSess = data.sessions.length;
-  const wkSess = data.sessions.filter(s=>weekKey(new Date(s.date))===weekKey()).length;
-  const mData = MONTHS.map((m,i) => ({ m, c:data.sessions.filter(s=>(parseInt(s.date.split("-")[1])-1)===MONTH_NUMS[i]).length }));
+  const wkSess = data.sessions.filter(s => {
+    try { return weekKey(new Date(s.date)) === weekKey(); }
+    catch { return false; }
+  }).length;
 
   return (
-    <div style={{ paddingTop:24 }}>
-      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:6 }}>
+    <div style={{ paddingTop:12 }}>
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:16 }}>
         <div style={{ fontSize:26, fontWeight:900, color:C.textLight1, fontFamily:F, textTransform:"uppercase" }}>Train</div>
         <TxtBtn onClick={() => setView("newRoutine")}>+ Routine</TxtBtn>
       </div>
-      <div style={{ fontSize:13, fontWeight:700, color:C.textLight3, marginBottom:20, fontFamily:FB, textTransform:"uppercase" }}>{wkSess} session{wkSess!==1?"s":""} this week</div>
 
-      <div style={{ display:"flex", gap:12, marginBottom:16 }}>
-        <DarkCard style={{ flex:1, padding:"16px", marginBottom:0 }}>
-          <Label dark>Total</Label>
-          <MedNum color={C.textDark1} style={{ marginTop:8 }}>{totalSess}</MedNum>
-        </DarkCard>
-        <DarkCard style={{ flex:1, padding:"16px", marginBottom:0 }}>
-          <Label dark>This week</Label>
-          <MedNum color={C.lime} style={{ marginTop:8 }}>{wkSess}</MedNum>
-        </DarkCard>
-      </div>
-
-      {totalSess>0 && (
-        <WhiteCard>
-          <Label style={{ marginBottom:12 }}>6-month activity</Label>
-          <ResponsiveContainer width="100%" height={70}>
-            <BarChart data={mData} barSize={24}>
-              <XAxis dataKey="m" tick={{ fill:C.textLight3, fontSize:11, fontFamily:FB, fontWeight:700 }} axisLine={false} tickLine={false} />
-              <Bar dataKey="c" fill={C.purple} stroke={C.ink} strokeWidth={2} />
-              <Tooltip contentStyle={{ background:C.ink, border:`2px solid ${C.ink}`, fontSize:12, borderRadius:0, color:"#fff", fontFamily:FM, fontWeight:700 }} />
-            </BarChart>
-          </ResponsiveContainer>
-        </WhiteCard>
-      )}
-
-      {data.prHistory && Object.keys(data.prHistory).length > 0 && (() => {
-        const prEntries = Object.entries(data.prHistory)
-          .map(([name, history]) => ({ name, pr: Math.max(...history.map(e=>e.weight)), date: [...history].sort((a,b)=>b.date.localeCompare(a.date))[0]?.date }))
-          .sort((a,b) => b.pr - a.pr);
-
-        return (
-          <WhiteCard>
-            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
-              <Label>Personal Records 🏆</Label>
-              <span style={{ fontSize:11, fontWeight:800, color:C.textLight3, fontFamily:FM }}>{prEntries.length} exercise{prEntries.length!==1?"s":""}</span>
-            </div>
-            {prEntries.map((entry, idx) => (
-              <div key={entry.name}>
-                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"12px 0" }}>
-                  <div style={{ flex:1, minWidth:0 }}>
-                    <div style={{ fontSize:14, fontWeight:700, color:C.textLight1, fontFamily:FB, textTransform:"uppercase" }}>{entry.name}</div>
-                    {entry.date && <div style={{ fontSize:11, fontWeight:700, color:C.textLight4, marginTop:4, fontFamily:FM }}>Set {entry.date}</div>}
-                  </div>
-                  <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-                    <div style={{ fontSize:22, fontWeight:900, color:C.textLight1, fontFamily:FM }}>{entry.pr}<span style={{ fontSize:12, fontWeight:700, color:C.textLight3 }}>kg</span></div>
-                    <span style={{ fontSize:18 }}>🏆</span>
-                  </div>
-                </div>
-                {idx < prEntries.length-1 && <Sep />}
-              </div>
-            ))}
-          </WhiteCard>
-        );
-      })()}
-
-      {data.routines.length===0 && (
-        <div style={{ textAlign:"center", padding:"64px 0" }}>
-          <div style={{ fontSize:44, marginBottom:16 }}>↑</div>
-          <div style={{ fontSize:16, fontWeight:800, color:C.textLight3, marginBottom:12, fontFamily:FB, textTransform:"uppercase" }}>No routines yet</div>
-          <TxtBtn onClick={() => setView("newRoutine")}>Create your first routine</TxtBtn>
+      <DarkCard>
+        <Label dark style={{ marginBottom:8 }}>Workout Stats</Label>
+        <div style={{ display:"flex", alignItems:"baseline", gap:8, marginBottom:4 }}>
+          <BigNum color={C.textDark1}>{wkSess}</BigNum>
+          <span style={{ fontSize:14, fontWeight:800, color:C.textDark3, fontFamily:FB, textTransform:"uppercase" }}>Sessions This Week</span>
         </div>
-      )}
-
-      <div style={{ marginTop:8 }}>
-        {data.routines.map(r => {
-          const sc = data.sessions.filter(s=>s.routineId===r.id).length;
-          const ls = [...data.sessions].filter(s=>s.routineId===r.id).sort((a,b)=>b.date.localeCompare(a.date))[0];
-          return (
-            <DarkCard key={r.id}>
-              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:16 }}>
-                <div style={{ flex:1, minWidth:0 }}>
-                  <div style={{ fontSize:20, fontWeight:900, color:C.textDark1, fontFamily:F, textTransform:"uppercase" }}>{r.name}</div>
-                  <div style={{ fontSize:12, fontWeight:700, color:C.textDark3, marginTop:6, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", fontFamily:FB }}>
-                    {r.exercises.map(e=>e.name).join(" · ").toUpperCase()}
-                  </div>
-                  <div style={{ fontSize:11, fontWeight:800, color:C.lime, marginTop:6, fontFamily:FM }}>{sc} SESSION{sc!==1?"S":""} {ls?`· LAST ${ls.date}`:""}</div>
-                </div>
-                <div style={{ display:"flex", gap:12, marginLeft:12 }}>
-                  <TxtBtn onClick={() => { setHistR(r); setView("history"); }} color={C.textDark2} style={{ fontSize:12 }}>History</TxtBtn>
-                  <TxtBtn onClick={() => { setEditR(r); setView("editRoutine"); }} color={C.textDark2} style={{ fontSize:12 }}>Edit</TxtBtn>
-                </div>
-              </div>
-              <PurpleBtn onClick={() => { setActiveR(r); setView("session"); }}>▶ Start {r.name}</PurpleBtn>
-            </DarkCard>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-// ── Goals ───────────────────────────────────────────────────────────────────
-function Goals({ data, persist, showToast }) {
-  const [addSheet, setAddSheet]   = useState(false);
-  const [editGoal, setEditGoal]   = useState(null);
-  const [gName, setGName]         = useState("");
-  const [gTarget, setGTarget]     = useState("");
-  const [linkedIds, setLinkedIds] = useState([]);
-
-  const openAdd = () => {
-    setGName(""); setGTarget(""); setLinkedIds([]);
-    setEditGoal(null); setAddSheet(true);
-  };
-  const openEdit = (g) => {
-    setGName(g.name); setGTarget(String(g.target));
-    setLinkedIds(g.linkedHabitIds || []);
-    setEditGoal(g); setAddSheet(true);
-  };
-  const toggleHabit = (id) =>
-    setLinkedIds(prev => prev.includes(id) ? prev.filter(x=>x!==id) : [...prev, id]);
-
-  const save = async () => {
-    if (!gName.trim() || !gTarget) return;
-    const base = { name:gName.trim(), target:parseFloat(gTarget), linkedHabitIds:linkedIds };
-    if (editGoal) {
-      await persist({ ...data, goals: data.goals.map(g => g.id === editGoal.id ? { ...g, ...base } : g) });
-      showToast("Goal updated ✓");
-    } else {
-      await persist({ ...data, goals: [...data.goals, { id:Date.now(), current:0, ...base }] });
-      showToast("Goal added ✓");
-    }
-    setAddSheet(false);
-  };
-
-  const updGoal = async (id, v) => {
-    if (isNaN(v)) return;
-    await persist({ ...data, goals: data.goals.map(g => g.id===id ? { ...g, current:Math.min(v,g.target) } : g) });
-    showToast("Updated ✓");
-  };
-  const del = async (id) => {
-    if(!window.confirm("Delete this goal?")) return;
-    await persist({ ...data, goals: data.goals.filter(g => g.id!==id) });
-    showToast("Removed");
-  };
-
-  const done = data.goals.filter(g => g.current >= g.target).length;
-
-  return (
-    <div style={{ paddingTop:24 }}>
-      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:6 }}>
-        <div style={{ fontSize:26, fontWeight:900, color:C.textLight1, fontFamily:F, textTransform:"uppercase" }}>Goals</div>
-        <TxtBtn onClick={openAdd}>+ Add</TxtBtn>
-      </div>
-      {data.goals.length>0 && (
-        <div style={{ fontSize:13, fontWeight:700, color:C.textLight3, marginBottom:20, fontFamily:FB, textTransform:"uppercase" }}>
-          {done} of {data.goals.length} complete
-        </div>
-      )}
-
-      {data.goals.length===0 && (
-        <div style={{ textAlign:"center", padding:"72px 0 32px" }}>
-          <div style={{ fontSize:44, marginBottom:16 }}>◎</div>
-          <div style={{ fontSize:16, fontWeight:800, color:C.textLight3, marginBottom:12, fontFamily:FB, textTransform:"uppercase" }}>No goals yet</div>
-          <TxtBtn onClick={openAdd}>Set your first goal</TxtBtn>
-        </div>
-      )}
-
-      {data.goals.map(g => {
-        const pct      = Math.min(100, Math.round((g.current / g.target) * 100));
-        const isDone   = pct >= 100;
-        const col      = isDone ? C.green : pct >= 50 ? C.orange : C.purple;
-        const support  = getGoalSupportScore(g, data.habits);
-        const linked   = (g.linkedHabitIds || []).map(id => data.habits.find(h => h.id === id)).filter(Boolean);
-
-        return (
-          <DarkCard key={g.id}>
-            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:14 }}>
-              <div style={{ fontSize:20, fontWeight:900, color:C.textDark1, fontFamily:F, textTransform:"uppercase", flex:1, marginRight:10 }}>
-                {g.name}{isDone?" 🏆":""}
-              </div>
-              <div style={{ display:"flex", gap:12, flexShrink:0 }}>
-                <TxtBtn onClick={() => openEdit(g)} color={C.textDark3} style={{ fontSize:12 }}>Edit</TxtBtn>
-                <TxtBtn onClick={() => del(g.id)} color={C.textDark2} style={{ fontSize:18, textDecoration:"none" }}>✕</TxtBtn>
-              </div>
-            </div>
-
-            <div style={{ display:"flex", alignItems:"baseline", gap:12, marginBottom:16 }}>
-              <InlineLog dark value={g.current} unit={`/ ${g.target}`} color={col} onSave={v=>updGoal(g.id,v)} />
-              <Pill color={col} bg={col}>{pct}%{isDone?" ✓":""}</Pill>
-            </div>
-            <Progress value={pct} max={100} color={col} height={10} bg="#1A1A1A" />
-
-            {linked.length > 0 && (
-              <div style={{ marginTop:16, paddingTop:14, borderTop:`2px solid rgba(255,255,255,0.12)` }}>
-                {support !== null && (
-                  <div style={{ marginBottom:12 }}>
-                    <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:6 }}>
-                      <Label dark>Habit Support</Label>
-                      <div style={{ fontSize:12, fontWeight:900, color: support===100?C.lime:support>=50?C.orange:C.textDark2, fontFamily:FM }}>
-                        {support}%
-                      </div>
-                    </div>
-                    <Progress value={support} max={100} color={support===100?C.lime:support>=50?C.orange:C.red} height={6} bg="#1A1A1A" />
-                  </div>
-                )}
-
-                <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
-                  {linked.map(h => {
-                    const today = todayKey();
-                    const state = h.completions?.[today];
-                    const isDoneH = state === "done";
-                    const isMissed = state === "missed";
-                    return (
-                      <div key={h.id} style={{
-                        display:"flex", alignItems:"center", gap:6,
-                        background: isDoneH?"#003320":isMissed?"#330000":"#1A1A1A",
-                        border:`2px solid ${isDoneH?C.green:isMissed?C.red:"rgba(255,255,255,0.2)"}`,
-                        padding:"4px 10px",
-                      }}>
-                        <span style={{ fontSize:12 }}>{isDoneH?"✓":isMissed?"✕":"○"}</span>
-                        <span style={{ fontSize:11, fontWeight:700, color: isDoneH?C.green:isMissed?C.red:C.textDark3, fontFamily:FB }}>
-                          {h.name}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-          </DarkCard>
-        );
-      })}
-
-      {addSheet && (
-        <Sheet title={editGoal ? "Edit Goal" : "New Goal"} onClose={() => setAddSheet(false)} dark>
-          <Label dark>Goal name</Label>
-          <Input dark value={gName} onChange={setGName} placeholder="e.g. Run 100km total" style={{ marginTop:8, marginBottom:20 }} />
-          <Label dark>Target number</Label>
-          <Input dark value={gTarget} onChange={setGTarget} placeholder="e.g. 100" type="number" style={{ marginTop:8, marginBottom:24 }} />
-
-          {data.habits.length > 0 && (
-            <div style={{ marginBottom:24 }}>
-              <Label dark style={{ marginBottom:12 }}>Link supporting habits</Label>
-              <div style={{ fontSize:12, fontWeight:600, color:C.textDark3, marginBottom:12, fontFamily:FB }}>
-                Linked habits show a daily support score on your goal card.
-              </div>
-              {data.habits.map(h => {
-                const sel = linkedIds.includes(h.id);
-                return (
-                  <button key={h.id} onClick={() => toggleHabit(h.id)} style={{
-                    width:"100%", display:"flex", alignItems:"center", gap:14,
-                    background: sel ? "#003320" : C.cardDark,
-                    border:`2px solid ${sel ? C.green : C.ink}`,
-                    padding:"12px 16px", marginBottom:10, cursor:"pointer", textAlign:"left",
-                    boxShadow: sel ? `3px 3px 0 ${C.green}` : HS(2, "#fff"),
-                  }}>
-                    <div style={{
-                      width:22, height:22, border:`2px solid ${sel?C.green:C.ink}`,
-                      background: sel ? C.green : "transparent",
-                      display:"flex", alignItems:"center", justifyContent:"center",
-                      flexShrink:0, fontSize:13, color:"#fff", fontWeight:900,
-                    }}>{sel?"✓":""}</div>
-                    <span style={{ fontSize:14, fontWeight:700, color:C.textDark1, fontFamily:FB }}>{h.name}</span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
-
-          <PurpleBtn onClick={save}>{editGoal ? "Save Changes" : "Add Goal"}</PurpleBtn>
-        </Sheet>
-      )}
-    </div>
-  );
-}
-
-// ── Challenge (with Reset) ──────────────────────────────────────────────────
-function Challenge({ data, persist, showToast, onReset, onExport, onImport }) {
-  const dayNum = getDayNumber();
-  const today = new Date(); today.setHours(0,0,0,0);
-  const [photoSheet, setPhotoSheet] = useState(false);
-  const [photoMonth, setPhotoMonth] = useState(null);
-  const [compare, setCompare] = useState(false);
-  const [confirmReset, setConfirmReset] = useState(false);
-
-  const days = Array.from({ length:TOTAL_DAYS }, (_,i) => {
-    const d = new Date(CHALLENGE_START); d.setDate(d.getDate()+i);
-    const k = dateKey(d);
-    return {
-      k, isPast: d<today, isToday: k===todayKey(),
-      complete: (data.habits.length>0 && data.habits.some(h=>h.completions?.[k]==="done"))||data.sessions.some(s=>s.date===k),
-      n: i+1
-    };
-  });
-
-  let streak = 0;
-  for (let i=dayNum-1; i>=0; i--) { if (days[i].complete) streak++; else break; }
-
-  const monthStats = MONTHS.map((m,idx) => {
-    const mo = MONTH_NUMS[idx];
-    const md = days.filter(d=>(parseInt(d.k.split("-")[1])-1)===mo);
-    const cp = md.filter(d=>d.complete).length;
-    return { m, total:md.length, cp, pct: md.length ? Math.round((cp/md.length)*100) : 0 };
-  });
-
-  const photoKeys = MONTHS.map((_,i) => monthKey(new Date(`2025-${String(MONTH_NUMS[i]+1).padStart(2,"0")}-01`)));
-  const withPhotos = photoKeys.map((k,i) => ({ m:MONTHS[i], key:k, src:data.photos?.[k] })).filter(p=>p.src);
-
-  const handlePhoto = async (e) => {
-    const file=e.target.files?.[0]; if (!file) return;
-    const reader=new FileReader();
-    reader.onload = async (ev) => { await persist({ ...data, photos:{ ...data.photos, [photoKeys[photoMonth]]:ev.target.result } }); setPhotoSheet(false); showToast("Photo saved ✓"); };
-    reader.readAsDataURL(file);
-  };
-
-  const todayDone = days.find(d=>d.isToday)?.complete;
-
-  return (
-    <div style={{ paddingTop:24 }}>
-      <div style={{ fontSize:26, fontWeight:900, color:C.textLight1, fontFamily:F, textTransform:"uppercase", marginBottom:6 }}>Progress</div>
-      <div style={{ fontSize:13, fontWeight:700, color:C.textLight3, marginBottom:24, fontFamily:FM }}>JUL 1 → DEC 31, 2025</div>
-
-      <DarkCard style={{ overflow:"hidden" }}>
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end" }}>
-          <div>
-            <Label dark>Current streak</Label>
-            <BigNum size={56} color={streak>0?C.lime:C.textDark3}>{streak}</BigNum>
-            <div style={{ fontSize:14, fontWeight:800, color:C.textDark2, marginTop:10, fontFamily:FB, textTransform:"uppercase" }}>days 🔥</div>
-          </div>
-          <div style={{ textAlign:"right" }}>
-            <Label dark>Day</Label>
-            <MedNum color={C.textDark1} style={{ fontSize:36, marginTop:6 }}>{dayNum}</MedNum>
-            <div style={{ fontSize:12, fontWeight:700, color:C.textDark3, marginTop:6, fontFamily:FB, textTransform:"uppercase" }}>of {TOTAL_DAYS}</div>
-            <Progress value={(dayNum/TOTAL_DAYS)*100} max={100} color={C.lime} height={8} bg="#1A1A1A" style={{ width:90, marginTop:12 }} />
-          </div>
-        </div>
-        <div style={{ marginTop:20, display:"inline-flex", alignItems:"center", gap:10, background: todayDone?C.lime:"#1A1A1A", border:`2px solid ${todayDone?C.ink:"#fff"}`, padding:"6px 12px" }}>
-          <span style={{ fontSize:12, fontWeight:800, color: todayDone?C.ink:C.textDark2, fontFamily:FB }}>
-            {todayDone?"TODAY COMPLETE ✓":"TODAY NOT LOGGED YET"}
-          </span>
-        </div>
+        <div style={{ fontSize:11, fontWeight:700, color:C.textDark2, fontFamily:FM }}>TOTAL SESSIONS LOGGED: {totalSess}</div>
       </DarkCard>
 
-      <WeightChart data={data} />
-
-      <WhiteCard style={{ padding:0, overflow:"hidden" }}>
-        <div style={{ padding:"16px 18px 10px" }}><Label>Monthly breakdown</Label></div>
-        {monthStats.map((ms,idx) => (
-          <div key={ms.m}>
-            <div style={{ padding:"12px 18px" }}>
-               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:8 }}>
-                <span style={{ fontSize:15, fontWeight:800, color:C.textLight1, fontFamily:F, textTransform:"uppercase" }}>{ms.m}</span>
-                <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-                  <span style={{ fontSize:12, fontWeight:700, color:C.textLight3, fontFamily:FM }}>{ms.cp}/{ms.total}</span>
-                  <Pill color={ms.pct>=80?C.green:ms.pct>=50?C.orange:C.purple} bg={ms.pct>=80?C.green:ms.pct>=50?C.orange:C.purple}>{ms.pct}%</Pill>
-                </div>
-              </div>
-              <Progress value={ms.pct} max={100} color={ms.pct>=80?C.green:ms.pct>=50?C.orange:C.purple} height={6} bg={C.cardMid} />
-            </div>
-            {idx<monthStats.length-1 && <Sep />}
-          </div>
-        ))}
-      </WhiteCard>
-
-      <WhiteCard>
-        <Label style={{ marginBottom:16 }}>184-day grid</Label>
-        <div style={{ display:"flex", flexWrap:"wrap", gap:4, marginTop:14 }}>
-          {days.map(d => (
-            <div key={d.k} title={`Day ${d.n}`} style={{
-              width:14, height:14, flexShrink:0,
-              background: d.isToday?C.lime:d.complete?C.purple:d.isPast?C.cardMid:C.cardWhite,
-              border:`2px solid ${C.ink}`, transition:"background 0.2s",
-            }} />
-          ))}
-        </div>
-        <div style={{ display:"flex", gap:16, marginTop:16, flexWrap:"wrap" }}>
-          {[{ c:C.lime, l:"Today" },{ c:C.purple, l:"Done" },{ c:C.cardMid, l:"Missed" },{ c:C.cardWhite, l:"Upcoming" }].map(l => (
-            <div key={l.l} style={{ display:"flex", alignItems:"center", gap:6 }}>
-              <div style={{ width:12, height:12, background:l.c, border:`2px solid ${C.ink}` }} />
-              <span style={{ fontSize:10, fontWeight:800, color:C.textLight2, fontFamily:FB }}>{l.l.toUpperCase()}</span>
-            </div>
-          ))}
-        </div>
-      </WhiteCard>
-
-      <WhiteCard>
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:16 }}>
-          <Label>Progress photos</Label>
-          {withPhotos.length>=2 && (
-            <TxtBtn onClick={() => setCompare(!compare)} color={C.textLight2} style={{ fontSize:12 }}>
-              {compare?"Grid":"Compare"}
-            </TxtBtn>
-          )}
-        </div>
-        {compare && withPhotos.length>=2 ? (
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12 }}>
-            {[withPhotos[0], withPhotos[withPhotos.length-1]].map(p => (
-              <div key={p.key}>
-                <Label style={{ marginBottom:8 }}>{p.m}</Label>
-                <img src={p.src} alt={p.m} style={{ width:"100%", border:`3px solid ${C.ink}`, objectFit:"cover", height:160 }} />
-              </div>
-            ))}
+      <div style={{ marginTop:16 }}>
+        <Label>My Routines</Label>
+        {data.routines.length === 0 ? (
+          <div style={{ textAlign:"center", padding:"32px 0", fontSize:13, fontWeight:700, color:C.textLight3, fontFamily:FB, textTransform:"uppercase" }}>
+            No routines found. Tap "+ Routine" above to create one.
           </div>
         ) : (
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10 }}>
-            {MONTHS.map((m,i) => {
-              const src = data.photos?.[photoKeys[i]];
-              return (
-                <div key={m} onClick={() => { setPhotoMonth(i); setPhotoSheet(true); }} style={{
-                  aspectRatio:"1", overflow:"hidden", background:C.cardMid, cursor:"pointer", border:`2px solid ${C.ink}`,
-                }}>
-                  {src
-                    ? <img src={src} alt={m} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
-                    : <div style={{ height:"100%", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:6 }}>
-                        <span style={{ fontSize:18 }}>📷</span>
-                        <span style={{ fontSize:10, fontWeight:800, color:C.textLight2, fontFamily:FB }}>{m.toUpperCase()}</span>
-                      </div>
-                  }
+          data.routines.map(r => {
+            const rSess = [...data.sessions].filter(s => s.routineId === r.id).sort((a,b) => b.date.localeCompare(a.date));
+            const lastDate = rSess[0]?.date;
+            return (
+              <WhiteCard key={r.id} style={{ padding: "16px 14px" }}>
+                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:8 }}>
+                  <div>
+                    <div style={{ fontSize:18, fontWeight:900, color:C.textLight1, fontFamily:F, textTransform:"uppercase" }}>{r.name}</div>
+                    <div style={{ fontSize:11, fontWeight:700, color:C.textLight3, marginTop:2, fontFamily:FB }}>
+                      {r.exercises.length} exercise{r.exercises.length > 1 ? "s" : ""}
+                    </div>
+                  </div>
+                  <div style={{ display:"flex", gap:10 }}>
+                    <TxtBtn onClick={() => { setHistR(r); setView("history"); }}>History</TxtBtn>
+                    <TxtBtn onClick={() => { setEditR(r); setView("editRoutine"); }}>Edit</TxtBtn>
+                  </div>
                 </div>
-              );
-            })}
-          </div>
+                {lastDate && <div style={{ fontSize:10, fontWeight:800, color:C.purple, marginBottom:12, fontFamily:FB }}>LAST DONE: {lastDate}</div>}
+                <PurpleBtn onClick={() => { setActiveR(r); setView("session"); }}>▶ Start Workout</PurpleBtn>
+              </WhiteCard>
+            );
+          })
         )}
-      </WhiteCard>
-
-      <div style={{ marginTop:28, marginBottom:12 }}>
-        <Label color={C.textLight3} style={{ marginBottom:14 }}>Backup & Export</Label>
-        <WhiteCard style={{ marginBottom:0 }}>
-          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:18 }}>
-            <div>
-              <div style={{ fontSize:15, fontWeight:900, color:C.textLight1, fontFamily:F, textTransform:"uppercase", marginBottom:6 }}>Download Backup</div>
-              <div style={{ fontSize:13, fontWeight:600, color:C.textLight3, fontFamily:FB, lineHeight:1.4 }}>Save all your data as a JSON file</div>
-            </div>
-            <button onClick={onExport} style={{
-              background:C.cardDark, color:C.lime, border:`3px solid ${C.ink}`,
-              padding:"12px 18px", fontSize:13, fontWeight:900, cursor:"pointer", fontFamily:F, boxShadow:HS(3), flexShrink:0, textTransform:"uppercase",
-            }}>↓ Export</button>
-          </div>
-          <Sep />
-          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginTop:18 }}>
-            <div>
-              <div style={{ fontSize:15, fontWeight:900, color:C.textLight1, fontFamily:F, textTransform:"uppercase", marginBottom:6 }}>Restore Backup</div>
-              <div style={{ fontSize:13, fontWeight:600, color:C.textLight3, fontFamily:FB, lineHeight:1.4 }}>Import a backup JSON file</div>
-            </div>
-            <label style={{
-              background:C.cardWhite, color:C.ink, border:`3px solid ${C.ink}`,
-              padding:"12px 18px", fontSize:13, fontWeight:900, cursor:"pointer", fontFamily:F, boxShadow:HS(3), flexShrink:0, textTransform:"uppercase", display:"block",
-            }}>
-              ↑ Import
-              <input type="file" accept=".json,application/json" onChange={onImport} style={{ display:"none" }} />
-            </label>
-          </div>
-        </WhiteCard>
       </div>
-
-      <div style={{ marginTop:36, marginBottom:28 }}>
-        <div style={{ borderTop:`3px solid ${C.ink}`, paddingTop:28 }}>
-          <Label color={C.textLight3} style={{ marginBottom:14 }}>Danger Zone</Label>
-          {!confirmReset ? (
-            <WhiteCard style={{ marginBottom:0, background:"#FFF5F5", border:`3px solid ${C.red}`, boxShadow:`4px 4px 0 ${C.red}` }}>
-              <div style={{ display:"flex", alignItems:"flex-start", gap:14 }}>
-                <span style={{ fontSize:26, flexShrink:0 }}>⚠️</span>
-                <div style={{ flex:1 }}>
-                  <div style={{ fontSize:16, fontWeight:900, color:C.ink, fontFamily:F, textTransform:"uppercase", marginBottom:6 }}>Reset & Start Fresh</div>
-                  <div style={{ fontSize:13, fontWeight:600, color:C.textLight2, fontFamily:FB, marginBottom:18, lineHeight:1.5 }}>
-                    This wipes everything — your name, habits, workouts, goals, photos, and all logs. You'll go through onboarding again. This cannot be undone.
-                  </div>
-                  <button onClick={() => setConfirmReset(true)} style={{
-                    background:"#FFF5F5", color:C.red, border:`3px solid ${C.red}`,
-                    padding:"12px 22px", fontSize:14, fontWeight:900, cursor:"pointer", fontFamily:F, textTransform:"uppercase", boxShadow:`3px 3px 0 ${C.red}`,
-                  }}>
-                    Reset Everything →
-                  </button>
-                </div>
-              </div>
-            </WhiteCard>
-          ) : (
-            <DarkCard style={{ background:"#1A0000", border:`3px solid ${C.red}`, boxShadow:`4px 4px 0 ${C.red}` }}>
-              <div style={{ fontSize:20, fontWeight:900, color:"#FF6B6B", fontFamily:F, textTransform:"uppercase", marginBottom:8 }}>Are you sure?</div>
-              <div style={{ fontSize:14, fontWeight:600, color:C.textDark2, fontFamily:FB, marginBottom:24, lineHeight:1.5 }}>
-                All your data will be permanently deleted. Day {dayNum} of your challenge, every habit, every session — gone.
-              </div>
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12 }}>
-                <GhostBtn onClick={() => setConfirmReset(false)} style={{ background:"#1A0000", color:C.textDark1, border:`3px solid ${C.textDark2}` }}>
-                  Cancel
-                </GhostBtn>
-                <DangerBtn onClick={onReset}>
-                  Yes, Wipe It
-                </DangerBtn>
-              </div>
-            </DarkCard>
-          )}
-        </div>
-      </div>
-
-      {photoSheet && (
-        <Sheet title={`${MONTHS[photoMonth]} Photo`} onClose={() => setPhotoSheet(false)}>
-          <label style={{ display:"block", background:C.cardWhite, border:`3px dashed ${C.ink}`, padding:48, textAlign:"center", cursor:"pointer" }}>
-            <div style={{ fontSize:36, marginBottom:10 }}>📷</div>
-            <div style={{ fontSize:14, fontWeight:700, color:C.textLight2, fontFamily:FB, textTransform:"uppercase" }}>Tap to choose photo</div>
-            <input type="file" accept="image/*" onChange={handlePhoto} style={{ display:"none" }} />
-          </label>
-        </Sheet>
-      )}
-    </div>
-  );
-}
-
-// ── Weekly Review ───────────────────────────────────────────────────────────
-function WeeklyReview({ data, persist, showToast, onBack }) {
-  const key = getThisSundayKey();
-  const ex = data.reviews?.[key]||{};
-  const [mood, setMood] = useState(ex.mood||null);
-  const [win, setWin] = useState(ex.win||"");
-  const [improve, setImprove] = useState(ex.improve||"");
-  const [showMore, setShowMore] = useState(false);
-  const [gymNotes, setGymNotes] = useState(ex.gymNotes||"");
-  const [past, setPast] = useState(false);
-
-  const wk = weekKey();
-  const thisWt = data.weights?.[wk];
-  const wkDays = last7();
-  const gymCnt = data.sessions.filter(s=>weekKey(new Date(s.date))===wk).length;
-  const avgSc = (() => { const v=wkDays.map(d=>data.screenTime?.[d.key]).filter(v=>v!=null); return v.length ? (v.reduce((a,b)=>a+b,0)/v.length).toFixed(1) : null; })();
-  const habAvg = (() => { if (!data.habits.length) return null; const v=wkDays.map(d=>Math.round((data.habits.filter(h=>h.completions?.[d.key]==="done").length/data.habits.length)*100)); return Math.round(v.reduce((a,b)=>a+b,0)/v.length); })();
-
-  const saveReview = async () => {
-    await persist({ ...data, reviews:{ ...data.reviews, [key]:{ mood, win, improve, gymNotes, savedAt:new Date().toISOString(), weight:thisWt } } });
-    showToast("Review saved ✓");
-  };
-
-  const pastReviews = Object.entries(data.reviews||{}).filter(([k])=>k!==key).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,8);
-  const MOODS = [{ e:"😔",l:"Rough" },{ e:"😐",l:"Okay" },{ e:"😊",l:"Good" },{ e:"💪",l:"Great" },{ e:"🔥",l:"Crushed" }];
-
-  if (past) return (
-    <div style={{ paddingTop:4 }}>
-      <NavBar title="Past Reviews" onBack={() => setPast(false)} />
-      {pastReviews.length===0
-        ? <div style={{ textAlign:"center", color:C.textLight3, fontWeight:700, padding:48, fontSize:15, fontFamily:FB, textTransform:"uppercase" }}>No past reviews yet.</div>
-        : pastReviews.map(([k,rv]) => (
-          <WhiteCard key={k}>
-            <div style={{ display:"flex", justifyContent:"space-between", marginBottom:10 }}>
-              <div style={{ fontSize:15, fontWeight:900, color:C.textLight1, fontFamily:F, textTransform:"uppercase" }}>{k.replace("review-","")}</div>
-              <span style={{ fontSize:20 }}>{MOODS.find(m=>m.l===rv.mood)?.e||""}</span>
-            </div>
-            {rv.weight && <div style={{ fontSize:12, fontWeight:800, color:C.textLight1, marginBottom:10, fontFamily:FM }}>⚖️ {rv.weight}kg</div>}
-            {rv.win && <div style={{ marginBottom:10 }}><Label color={C.green}>Win</Label><div style={{ fontSize:14, fontWeight:600, marginTop:4, color:C.textLight2, fontFamily:FB }}>{rv.win}</div></div>}
-            {rv.improve && <div style={{ marginBottom:10 }}><Label color={C.purple}>Improve</Label><div style={{ fontSize:14, fontWeight:600, marginTop:4, color:C.textLight2, fontFamily:FB }}>{rv.improve}</div></div>}
-            {rv.gymNotes && <div><Label>Gym</Label><div style={{ fontSize:14, fontWeight:600, marginTop:4, color:C.textLight2, fontFamily:FB }}>{rv.gymNotes}</div></div>}
-          </WhiteCard>
-        ))
-      }
-    </div>
-  );
-
-  return (
-    <div style={{ paddingTop:24 }}>
-      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:18 }}>
-        <div>
-          <Label>System Audit Endpoint</Label>
-          <div style={{ fontSize:28, fontWeight:900, fontFamily:F, textTransform:"uppercase" }}>Weekly Review</div>
-        </div>
-        <button onClick={onBack} style={{
-          background:C.cardDark, color:"#fff", border:`3px solid ${C.ink}`, padding:"8px 14px",
-          fontFamily:F, fontSize:13, textTransform:"uppercase", cursor:"pointer"
-        }}>Back</button>
-      </div>
-
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr 1fr", gap:10, marginBottom:18 }}>
-        {[
-          { l:"Weight", v: thisWt?`${thisWt}kg`:"—", c:C.textDark1 },
-          { l:"Gym",    v:`${gymCnt}`, c:C.lime },
-          { l:"Screen", v: avgSc?`${avgSc}h`:"—", c: avgSc&&parseFloat(avgSc)>(data.screenTimeGoal||3)?C.red:C.green },
-          { l:"Habits", v: habAvg!=null?`${habAvg}%`:"—", c: habAvg>=80?C.green:habAvg>=50?C.orange:C.purple },
-        ].map(s => (
-          <DarkCard key={s.l} style={{ padding:"14px 8px", textAlign:"center", marginBottom:0 }}>
-            <div style={{ fontSize:10, fontWeight:800, color:C.textDark3, marginBottom:8, textTransform:"uppercase", fontFamily:FB }}>{s.l}</div>
-            <div style={{ fontSize:18, fontWeight:900, color:s.c, fontFamily:FM }}>{s.v}</div>
-          </DarkCard>
-        ))}
-      </div>
-
-      <WhiteCard>
-        <Label style={{ marginBottom:14 }}>How was your week?</Label>
-        <div style={{ display:"flex", gap:8 }}>
-          {MOODS.map(m => (
-            <button key={m.l} onClick={() => setMood(m.l)} style={{
-              flex:1, background: mood===m.l ? C.lime : C.cardWhite,
-              border:`3px solid ${C.ink}`,
-              padding:"14px 6px", cursor:"pointer",
-              display:"flex", flexDirection:"column", alignItems:"center", gap:6, transition:"all 0.1s",
-            }}>
-              <span style={{ fontSize:22 }}>{m.e}</span>
-              <span style={{ fontSize:9, fontWeight:800, color:C.ink, fontFamily:FB }}>{m.l.toUpperCase()}</span>
-            </button>
-          ))}
-        </div>
-      </WhiteCard>
-
-      <WhiteCard>
-        <Label color={C.green} style={{ marginBottom:10 }}>One win this week</Label>
-        <Input value={win} onChange={setWin} placeholder="e.g. Hit all my PRs" />
-      </WhiteCard>
-
-      <WhiteCard>
-        <Label color={C.red} style={{ marginBottom:10 }}>One thing to improve</Label>
-        <Input value={improve} onChange={setImprove} placeholder="e.g. Sleep earlier" />
-      </WhiteCard>
-
-      <button onClick={() => setShowMore(s=>!s)} style={{
-        width:"100%", background:"none", border:"none", cursor:"pointer",
-        display:"flex", alignItems:"center", justifyContent:"center", gap:6,
-        padding:"10px 0", marginBottom: showMore?14:18,
-        color:C.textLight3, fontSize:12, fontWeight:800, fontFamily:FB, textTransform:"uppercase"
-      }}>
-        {showMore?"▲ less":"▼ gym notes"}
-      </button>
-
-      {showMore && (
-        <WhiteCard>
-          <Label style={{ marginBottom:10 }}>Gym notes ({gymCnt} sessions)</Label>
-          <Textarea value={gymNotes} onChange={setGymNotes} placeholder="Lifts, form cues, how it felt..." rows={3} />
-        </WhiteCard>
-      )}
-
-      <PurpleBtn onClick={saveReview} style={{ marginBottom:36 }}>Save Review</PurpleBtn>
-    </div>
-  );
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// ── ANALYTICS PAGE ──────────────────────────────────────────────────────────
-// ═══════════════════════════════════════════════════════════════════════════
-
-function AnalyticsStat({ label, value, sub, color, dark }) {
-  return (
-    <div style={{ textAlign:"center" }}>
-      <div style={{ fontSize:10, fontWeight:800, color: dark ? C.textDark3 : C.textLight3, textTransform:"uppercase", fontFamily:FB, marginBottom:6 }}>{label}</div>
-      <div style={{ fontSize:24, fontWeight:900, color: color || (dark ? C.textDark1 : C.textLight1), fontFamily:FM, lineHeight:1 }}>{value}</div>
-      {sub && <div style={{ fontSize:10, fontWeight:700, color: dark ? C.textDark3 : C.textLight4, marginTop:4, fontFamily:FB }}>{sub}</div>}
-    </div>
-  );
-}
-
-function SectionTitle({ children, icon }) {
-  return (
-    <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:14, marginTop:24 }}>
-      {icon && <span style={{ fontSize:18 }}>{icon}</span>}
-      <div style={{ fontSize:18, fontWeight:900, color:C.textLight1, fontFamily:F, textTransform:"uppercase" }}>{children}</div>
-    </div>
-  );
-}
-
-function Analytics({ data }) {
-  const [section, setSection] = useState("all");
-  const [compareIdx, setCompareIdx] = useState([0, 1]);
-  const [fullscreen, setFullscreen] = useState(null);
-
-  const habitAnalytics = (() => {
-    const habits = data.habits || [];
-    if (!habits.length) return null;
-    const allKeys = habits.flatMap(h => Object.keys(h.completions || {}));
-    const uniqueDates = [...new Set(allKeys)].filter(k => /^\d{4}-\d{2}-\d{2}$/.test(k)).sort();
-    let totalDone = 0, totalLogged = 0;
-    uniqueDates.forEach(k => {
-      habits.forEach(h => {
-        const s = h.completions?.[k];
-        if (s === "done" || s === "missed") { totalLogged++; if (s === "done") totalDone++; }
-      });
-    });
-    const completionPct = totalLogged > 0 ? Math.round((totalDone / totalLogged) * 100) : 0;
-    const bestStreak = Math.max(0, ...habits.map(h => getBestStreak(h)));
-    const currentStreak = Math.max(0, ...habits.map(h => getCurrentStreak(h)));
-    const last14 = Array.from({ length:14 }, (_,i) => {
-      const d = new Date(); d.setDate(d.getDate() - (13-i)); d.setHours(0,0,0,0);
-      const k = dateKey(d);
-      const done = habits.filter(h => h.completions?.[k] === "done").length;
-      const total = habits.length;
-      return { label: d.toLocaleDateString("en-US",{ weekday:"short" }).slice(0,2), pct: total > 0 ? Math.round((done/total)*100) : 0 };
-    });
-    return { completionPct, bestStreak, currentStreak, last14 };
-  })();
-
-  const workoutAnalytics = (() => {
-    const sessions = data.sessions || [];
-    if (!sessions.length) return null;
-    const totalWorkouts = sessions.length;
-    const fourWeeksAgo = new Date(); fourWeeksAgo.setDate(fourWeeksAgo.getDate() - 28);
-    const recent = sessions.filter(s => new Date(s.date) >= fourWeeksAgo);
-    const weeklyFreq = (recent.length / 4).toFixed(1);
-    const routineCounts = {};
-    sessions.forEach(s => {
-      if (s.routineName) routineCounts[s.routineName] = (routineCounts[s.routineName]||0) + 1;
-    });
-    const mostTrained = Object.entries(routineCounts).sort((a,b)=>b[1]-a[1])[0];
-    const monthly = MONTHS.map((m, idx) => {
-      const mo = MONTH_NUMS[idx];
-      const cnt = sessions.filter(s => parseInt(s.date.split("-")[1])-1 === mo).length;
-      return { label: m, count: cnt };
-    });
-    return { totalWorkouts, weeklyFreq, mostTrained, monthly };
-  })();
-
-  const weightAnalytics = (() => {
-    const weights = data.weights || {};
-    const keys = Object.keys(weights).filter(k => k.startsWith("week-")).sort();
-    if (keys.length < 1) return null;
-    const first = weights[keys[0]];
-    const last = weights[keys[keys.length-1]];
-    const totalChange = last != null && first != null ? Math.round((last - first) * 10) / 10 : null;
-    const weeklyTrend = getWeeklyWeightChange(data);
-    const pct = getWeightProgressPct(data.weightStart, data.weightTarget, last);
-    const history = getWeightHistory(data, 10);
-    return { totalChange, weeklyTrend, pct, history };
-  })();
-
-  const screenAnalytics = (() => {
-    const st = data.screenTime || {};
-    const allKeys = Object.keys(st).filter(k => /^\d{4}-\d{2}-\d{2}$/.test(k)).sort();
-    if (!allKeys.length) return null;
-    const goal = data.screenTimeGoal || 3;
-    const vals = allKeys.map(k => st[k]).filter(v => v != null);
-    const dailyAvg = vals.length ? (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1) : null;
-    const weeklyAvgs = Array.from({ length:6 }, (_,wi) => {
-      const weekStart = new Date(); weekStart.setDate(weekStart.getDate() - (5-wi)*7 - weekStart.getDay());
-      weekStart.setHours(0,0,0,0);
-      const weekVals = Array.from({ length:7 }, (_,di) => {
-        const d = new Date(weekStart); d.setDate(d.getDate()+di);
-        return st[dateKey(d)];
-      }).filter(v => v != null);
-      const wkLabel = weekStart.toLocaleDateString("en-US",{ month:"short", day:"numeric" });
-      return { label: wkLabel, avg: weekVals.length ? parseFloat((weekVals.reduce((a,b)=>a+b,0)/weekVals.length).toFixed(1)) : 0 };
-    });
-    const nonZeroWeeks = weeklyAvgs.filter(w=>w.avg>0);
-    const weeklyAvg = nonZeroWeeks.length ? (nonZeroWeeks.map(w=>w.avg).reduce((a,b)=>a+b,0)/nonZeroWeeks.length).toFixed(1) : null;
-    const adherencePct = vals.length ? Math.round((vals.filter(v=>v<=goal).length/vals.length)*100) : null;
-    return { dailyAvg, weeklyAvg, adherencePct, weeklyAvgs, goal };
-  })();
-
-  const goalAnalytics = (() => {
-    const goals = data.goals || [];
-    if (!goals.length) return null;
-    const completed = goals.filter(g => g.current >= g.target);
-    const active = goals.filter(g => g.current < g.target);
-    const completionPct = Math.round((completed.length / goals.length) * 100);
-    return { completionPct, active: active.length, completed: completed.length, total: goals.length, goals };
-  })();
-
-  const mealAnalytics = (() => {
-    const templates = data.mealTemplates || [];
-    if (!templates.length) return null;
-    
-    const logs = data.mealLogs || {};
-    const logDates = Object.keys(logs).filter(k => /^\d{4}-\d{2}-\d{2}$/.test(k));
-    
-    let totalItems = 0;
-    let doneItems = 0;
-    
-    logDates.forEach(d => {
-      const dStats = getMealStatsForDay(data, d);
-      totalItems += dStats.total;
-      doneItems += dStats.done;
-    });
-    
-    const overallAdherence = totalItems > 0 ? Math.round((doneItems/totalItems)*100) : 0;
-    const currentStreak = getCurrentMealStreak(data);
-    const bestStreak = getBestMealStreak(data);
-    
-    const perTemplate = templates.map(t => {
-      let tTotal = 0;
-      let tDone = 0;
-      logDates.forEach(d => {
-        tTotal += t.items.length;
-        const tLog = (logs[d] || {})[t.id] || {};
-        t.items.forEach((_, i) => { if (tLog[i]) tDone++; });
-      });
-      return {
-        name: t.name,
-        pct: tTotal > 0 ? Math.round((tDone/tTotal)*100) : 0
-      };
-    });
-    
-    return { overallAdherence, currentStreak, bestStreak, perTemplate };
-  })();
-
-  const photoKeys = MONTHS.map((_,i) => monthKey(new Date(`2025-${String(MONTH_NUMS[i]+1).padStart(2,"0")}-01`)));
-  const withPhotos = photoKeys.map((k,i) => ({ m:MONTHS[i], key:k, src:data.photos?.[k], monthIdx:i })).filter(p=>p.src);
-
-  const timelineCheckpoints = [
-    { label:"Week 1",  date:"Jul 7",  approxMo: 0 },
-    { label:"Week 4",  date:"Jul 28", approxMo: 0 },
-    { label:"Week 8",  date:"Aug 25", approxMo: 1 },
-    { label:"Week 12", date:"Sep 22", approxMo: 2 },
-  ];
-  const timelinePhotos = timelineCheckpoints.map((cp, idx) => {
-    const photo = withPhotos.find(p => p.monthIdx === cp.approxMo) || withPhotos[Math.min(idx, withPhotos.length-1)] || null;
-    return { ...cp, photo };
-  });
-
-  const TABS_A = [
-    { id:"all",    label:"All" },
-    { id:"habits", label:"Habits" },
-    { id:"meals",  label:"Meals" },
-    { id:"workout",label:"Workout" },
-    { id:"weight", label:"Weight" },
-    { id:"screen", label:"Screen" },
-    { id:"goals",  label:"Goals" },
-  ];
-
-  const show = (id) => section === "all" || section === id;
-
-  return (
-    <div style={{ paddingTop:24, paddingBottom:24 }}>
-      <div style={{ marginBottom:20 }}>
-        <div style={{ fontSize:26, fontWeight:900, color:C.textLight1, fontFamily:F, textTransform:"uppercase" }}>Metrics Engine</div>
-      </div>
-
-      <div style={{ display:"flex", gap:8, overflowX:"auto", paddingBottom:12, marginBottom:16, scrollbarWidth:"none" }}>
-        {TABS_A.map(t => (
-          <button key={t.id} onClick={() => setSection(t.id)} style={{
-            background: section===t.id ? C.lime : C.cardWhite,
-            color: C.ink, border:`3px solid ${C.ink}`,
-            padding:"8px 14px", fontSize:12, fontWeight:800, cursor:"pointer",
-            fontFamily:FB, textTransform:"uppercase", flexShrink:0, boxShadow: section===t.id ? HS(3) : "none",
-          }}>{t.label}</button>
-        ))}
-      </div>
-
-      {show("habits") && (
-        <>
-          <SectionTitle icon="◉">Habit Analytics</SectionTitle>
-          {habitAnalytics ? (
-            <>
-              <DarkCard>
-                <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:12 }}>
-                  <AnalyticsStat dark label="Completion" value={`${habitAnalytics.completionPct}%`} color={habitAnalytics.completionPct>=80?C.lime:habitAnalytics.completionPct>=50?C.orange:C.red} />
-                  <AnalyticsStat dark label="Best Streak" value={habitAnalytics.bestStreak} sub="days" color={C.lime} />
-                  <AnalyticsStat dark label="Current" value={habitAnalytics.currentStreak} sub="days 🔥" color={habitAnalytics.currentStreak>0?C.orange:C.textDark3} />
-                </div>
-                <div style={{ marginTop:16 }}>
-                  <Progress value={habitAnalytics.completionPct} max={100} color={habitAnalytics.completionPct>=80?C.lime:C.orange} height={8} bg="#1A1A1A" />
-                </div>
-              </DarkCard>
-              <WhiteCard>
-                <Label style={{ marginBottom:12 }}>14-day completion %</Label>
-                <ResponsiveContainer width="100%" height={90}>
-                  <BarChart data={habitAnalytics.last14} barSize={16}>
-                    <XAxis dataKey="label" tick={{ fill:C.textLight3, fontSize:10, fontFamily:FB, fontWeight:700 }} axisLine={false} tickLine={false} />
-                    <Bar dataKey="pct" fill={C.purple} stroke={C.ink} strokeWidth={2} />
-                    <Tooltip formatter={v=>`${v}%`} contentStyle={{ background:C.ink, border:`2px solid ${C.ink}`, fontSize:11, borderRadius:0, color:"#fff", fontFamily:FM, fontWeight:700 }} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </WhiteCard>
-              <WhiteCard>
-                <Label style={{ marginBottom:14 }}>Per habit</Label>
-                {data.habits.map((h, idx) => {
-                  const comp = h.completions || {};
-                  const dones = Object.values(comp).filter(v=>v==="done").length;
-                  const total = Object.values(comp).filter(v=>v==="done"||v==="missed").length;
-                  const pct = total > 0 ? Math.round((dones/total)*100) : 0;
-                  const cur = getCurrentStreak(h);
-                  return (
-                    <div key={h.id}>
-                      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"12px 0" }}>
-                        <div style={{ flex:1, minWidth:0, paddingRight:12 }}>
-                          <div style={{ fontSize:14, fontWeight:700, color:C.textLight1, fontFamily:FB, marginBottom:6 }}>{h.name}</div>
-                          <Progress value={pct} max={100} color={pct>=80?C.green:pct>=50?C.orange:C.purple} height={6} bg={C.cardMid} />
-                        </div>
-                        <div style={{ textAlign:"right", flexShrink:0 }}>
-                          <div style={{ fontSize:18, fontWeight:900, color:C.textLight1, fontFamily:FM }}>{pct}%</div>
-                          {cur > 0 && <div style={{ fontSize:10, fontWeight:800, color:C.orange, fontFamily:FB }}>🔥{cur}d</div>}
-                        </div>
-                      </div>
-                      {idx < data.habits.length-1 && <Sep />}
-                    </div>
-                  );
-                })}
-              </WhiteCard>
-            </>
-          ) : (
-            <WhiteCard>
-              <div style={{ textAlign:"center", padding:"20px 0", fontSize:14, fontWeight:700, color:C.textLight3, fontFamily:FB }}>No habits tracked yet</div>
-            </WhiteCard>
-          )}
-        </>
-      )}
-
-      {show("meals") && (
-        <>
-          <SectionTitle icon="🍽">Meal Analytics</SectionTitle>
-          {mealAnalytics ? (
-            <>
-              <DarkCard>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
-                  <AnalyticsStat dark label="Adherence" value={`${mealAnalytics.overallAdherence}%`} color={mealAnalytics.overallAdherence >= 80 ? C.lime : mealAnalytics.overallAdherence >= 50 ? C.orange : C.red} />
-                  <AnalyticsStat dark label="Best Streak" value={mealAnalytics.bestStreak} sub="days" color={C.lime} />
-                  <AnalyticsStat dark label="Current" value={mealAnalytics.currentStreak} sub="days 🔥" color={mealAnalytics.currentStreak > 0 ? C.orange : C.textDark3} />
-                </div>
-                <div style={{ marginTop: 16 }}>
-                  <Progress value={mealAnalytics.overallAdherence} max={100} color={mealAnalytics.overallAdherence >= 80 ? C.lime : C.orange} height={8} bg="#1A1A1A" />
-                </div>
-              </DarkCard>
-              
-              <WhiteCard>
-                <Label style={{ marginBottom: 14 }}>Completion per template</Label>
-                {mealAnalytics.perTemplate.map((t, idx) => (
-                  <div key={t.name}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 0" }}>
-                      <div style={{ flex: 1, minWidth: 0, paddingRight: 12 }}>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: C.textLight1, fontFamily: FB, marginBottom: 6 }}>{t.name}</div>
-                        <Progress value={t.pct} max={100} color={t.pct >= 80 ? C.green : t.pct >= 50 ? C.orange : C.purple} height={6} bg={C.cardMid} />
-                      </div>
-                      <div style={{ textAlign: "right", flexShrink: 0 }}>
-                        <div style={{ fontSize: 18, fontWeight: 900, color: C.textLight1, fontFamily: FM }}>{t.pct}%</div>
-                      </div>
-                    </div>
-                    {idx < mealAnalytics.perTemplate.length - 1 && <Sep />}
-                  </div>
-                ))}
-              </WhiteCard>
-            </>
-          ) : (
-            <WhiteCard>
-              <div style={{ textAlign: "center", padding: "20px 0", fontSize: 14, fontWeight: 700, color: C.textLight3, fontFamily: FB }}>No meals tracked yet</div>
-            </WhiteCard>
-          )}
-        </>
-      )}
-
-      {show("workout") && (
-        <>
-          <SectionTitle icon="↑">Workout Analytics</SectionTitle>
-          {workoutAnalytics ? (
-            <>
-              <DarkCard>
-                <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:12 }}>
-                  <AnalyticsStat dark label="Total" value={workoutAnalytics.totalWorkouts} sub="sessions" color={C.lime} />
-                  <AnalyticsStat dark label="Weekly" value={`${workoutAnalytics.weeklyFreq}x`} sub="avg/week" color={C.purple} />
-                  <AnalyticsStat dark label="Top Routine" value={workoutAnalytics.mostTrained ? String(workoutAnalytics.mostTrained[1]) : "—"} sub={workoutAnalytics.mostTrained ? workoutAnalytics.mostTrained[0].slice(0,8) : "—"} color={C.orange} />
-                </div>
-              </DarkCard>
-              <WhiteCard>
-                <Label style={{ marginBottom:12 }}>Monthly workouts</Label>
-                <ResponsiveContainer width="100%" height={100}>
-                  <BarChart data={workoutAnalytics.monthly} barSize={22}>
-                    <XAxis dataKey="label" tick={{ fill:C.textLight3, fontSize:11, fontFamily:FB, fontWeight:700 }} axisLine={false} tickLine={false} />
-                    <Bar dataKey="count" fill={C.purple} stroke={C.ink} strokeWidth={2} />
-                    <Tooltip formatter={v=>`${v} sessions`} contentStyle={{ background:C.ink, border:`2px solid ${C.ink}`, fontSize:11, borderRadius:0, color:"#fff", fontFamily:FM, fontWeight:700 }} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </WhiteCard>
-            </>
-          ) : (
-            <WhiteCard>
-              <div style={{ textAlign:"center", padding:"20px 0", fontSize:14, fontWeight:700, color:C.textLight3, fontFamily:FB }}>No workouts logged yet</div>
-            </WhiteCard>
-          )}
-        </>
-      )}
-
-      {show("weight") && (
-        <>
-          <SectionTitle icon="⚖️">Weight Analytics</SectionTitle>
-          {weightAnalytics ? (
-            <>
-              <DarkCard>
-                <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:12 }}>
-                  <AnalyticsStat dark label="Total Change"
-                    value={weightAnalytics.totalChange != null ? `${weightAnalytics.totalChange > 0 ? "+" : ""}${weightAnalytics.totalChange}kg` : "—"}
-                    color={weightAnalytics.totalChange != null ? (weightAnalytics.totalChange <= 0 ? C.green : C.red) : C.textDark3} />
-                  <AnalyticsStat dark label="Weekly Trend"
-                    value={weightAnalytics.weeklyTrend != null ? `${weightAnalytics.weeklyTrend > 0 ? "+" : ""}${weightAnalytics.weeklyTrend}` : "—"}
-                    sub="kg/week" color={C.lime} />
-                  <AnalyticsStat dark label="Progress"
-                    value={weightAnalytics.pct != null ? `${weightAnalytics.pct}%` : "—"}
-                    sub="to goal" color={weightAnalytics.pct >= 80 ? C.lime : C.orange} />
-                </div>
-                {weightAnalytics.pct != null && (
-                  <div style={{ marginTop:16 }}>
-                    <Progress value={weightAnalytics.pct} max={100} color={weightAnalytics.pct>=80?C.lime:C.orange} height={8} bg="#1A1A1A" />
-                  </div>
-                )}
-              </DarkCard>
-              {weightAnalytics.history.length > 1 && (
-                <WhiteCard>
-                  <Label style={{ marginBottom:12 }}>Weight history</Label>
-                  <ResponsiveContainer width="100%" height={120}>
-                    <LineChart data={weightAnalytics.history}>
-                      <XAxis dataKey="label" tick={{ fill:C.textLight3, fontSize:10, fontFamily:FB, fontWeight:700 }} axisLine={false} tickLine={false} />
-                      <Tooltip formatter={v=>`${v}kg`} contentStyle={{ background:C.ink, border:`2px solid ${C.ink}`, fontSize:11, borderRadius:0, color:"#fff", fontFamily:FM, fontWeight:700 }} />
-                      <Line type="monotone" dataKey="weight" stroke={C.purple} strokeWidth={3} dot={{ r:4, fill:C.purple, strokeWidth:2, stroke:C.ink }} />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </WhiteCard>
-              )}
-            </>
-          ) : (
-            <WhiteCard>
-              <div style={{ textAlign:"center", padding:"20px 0", fontSize:14, fontWeight:700, color:C.textLight3, fontFamily:FB }}>No weight logged yet</div>
-            </WhiteCard>
-          )}
-        </>
-      )}
-
-      {show("screen") && (
-        <>
-          <SectionTitle icon="📱">Screen Time Analytics</SectionTitle>
-          {screenAnalytics ? (
-            <>
-              <DarkCard>
-                <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:12 }}>
-                  <AnalyticsStat dark label="Daily Avg"
-                    value={`${screenAnalytics.dailyAvg}h`}
-                    color={parseFloat(screenAnalytics.dailyAvg) <= screenAnalytics.goal ? C.green : C.red} />
-                  <AnalyticsStat dark label="Weekly Avg"
-                    value={screenAnalytics.weeklyAvg ? `${screenAnalytics.weeklyAvg}h` : "—"}
-                    color={C.lime} />
-                  <AnalyticsStat dark label="Adherence"
-                    value={screenAnalytics.adherencePct != null ? `${screenAnalytics.adherencePct}%` : "—"}
-                    sub={`goal ≤${screenAnalytics.goal}h`}
-                    color={screenAnalytics.adherencePct >= 80 ? C.lime : screenAnalytics.adherencePct >= 50 ? C.orange : C.red} />
-                </div>
-                <div style={{ marginTop:16 }}>
-                  <Progress value={screenAnalytics.adherencePct||0} max={100} color={screenAnalytics.adherencePct>=80?C.lime:C.orange} height={8} bg="#1A1A1A" />
-                </div>
-              </DarkCard>
-              <WhiteCard>
-                <Label style={{ marginBottom:12 }}>Weekly averages</Label>
-                <ResponsiveContainer width="100%" height={100}>
-                  <BarChart data={screenAnalytics.weeklyAvgs} barSize={22}>
-                    <XAxis dataKey="label" tick={{ fill:C.textLight3, fontSize:9, fontFamily:FB, fontWeight:700 }} axisLine={false} tickLine={false} />
-                    <Bar dataKey="avg" fill={C.purple} stroke={C.ink} strokeWidth={2} />
-                    <Tooltip formatter={v=>`${v}h`} contentStyle={{ background:C.ink, border:`3px solid ${C.ink}`, fontSize:11, borderRadius:0, color:"#fff", fontFamily:FM, fontWeight:700 }} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </WhiteCard>
-            </>
-          ) : (
-            <WhiteCard>
-              <div style={{ textAlign:"center", padding:"20px 0", fontSize:14, fontWeight:700, color:C.textLight3, fontFamily:FB }}>No screen time logged yet</div>
-            </WhiteCard>
-          )}
-        </>
-      )}
-
-      {show("goals") && (
-        <>
-          <SectionTitle icon="◎">Goal Analytics</SectionTitle>
-          {goalAnalytics ? (
-            <>
-              <DarkCard>
-                <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:12 }}>
-                  <AnalyticsStat dark label="Completion" value={`${goalAnalytics.completionPct}%`} color={goalAnalytics.completionPct>=80?C.lime:C.orange} />
-                  <AnalyticsStat dark label="Active" value={goalAnalytics.active} sub="goals" color={C.purple} />
-                  <AnalyticsStat dark label="Completed" value={goalAnalytics.completed} sub="goals 🏆" color={C.green} />
-                </div>
-                <div style={{ marginTop:16 }}>
-                  <Progress value={goalAnalytics.completionPct} max={100} color={C.lime} height={8} bg="#1A1A1A" />
-                </div>
-              </DarkCard>
-              <WhiteCard>
-                <Label style={{ marginBottom:14 }}>Goal breakdown</Label>
-                {goalAnalytics.goals.map((g, idx) => {
-                  const pct = Math.min(100, Math.round((g.current/g.target)*100));
-                  const col = pct>=100?C.green:pct>=50?C.orange:C.purple;
-                  return (
-                    <div key={g.id}>
-                      <div style={{ padding:"12px 0" }}>
-                        <div style={{ display:"flex", justifyContent:"space-between", marginBottom:6 }}>
-                          <div style={{ fontSize:14, fontWeight:700, color:C.textLight1, fontFamily:FB }}>{g.name}{pct>=100?" 🏆":""}</div>
-                          <div style={{ fontSize:13, fontWeight:900, color:col, fontFamily:FM }}>{pct}%</div>
-                        </div>
-                        <Progress value={pct} max={100} color={col} height={6} bg={C.cardMid} />
-                        <div style={{ fontSize:11, fontWeight:700, color:C.textLight4, marginTop:4, fontFamily:FM }}>{g.current} / {g.target}</div>
-                      </div>
-                      {idx < goalAnalytics.goals.length-1 && <Sep />}
-                    </div>
-                  );
-                })}
-              </WhiteCard>
-            </>
-          ) : (
-            <WhiteCard>
-              <div style={{ textAlign:"center", padding:"20px 0", fontSize:14, fontWeight:700, color:C.textLight3, fontFamily:FB }}>No goals set yet</div>
-            </WhiteCard>
-          )}
-        </>
-      )}
-
-      {section === "all" && (
-        <>
-          <SectionTitle icon="📸">Transformation Timeline</SectionTitle>
-          {withPhotos.length === 0 ? (
-            <WhiteCard>
-              <div style={{ textAlign:"center", padding:"24px 0" }}>
-                <div style={{ fontSize:36, marginBottom:10 }}>📷</div>
-                <div style={{ fontSize:14, fontWeight:700, color:C.textLight3, fontFamily:FB }}>Add photos in the Progress tab to see your transformation</div>
-              </div>
-            </WhiteCard>
-          ) : (
-            <>
-              <div style={{ overflowX:"auto", scrollbarWidth:"none", marginBottom:16 }}>
-                <div style={{ display:"flex", gap:14, paddingBottom:10, width:"max-content" }}>
-                  {timelinePhotos.map((cp, idx) => (
-                    <div key={idx} style={{ width:140, flexShrink:0 }}>
-                      <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:8 }}>
-                        <div style={{ width:12, height:12, background: cp.photo?.src ? C.lime : C.cardMid, border:`2px solid ${C.ink}`, flexShrink:0 }} />
-                        <div style={{ fontSize:11, fontWeight:900, color:C.textLight1, fontFamily:FB, textTransform:"uppercase" }}>{cp.label}</div>
-                      </div>
-                      <div style={{ fontSize:10, fontWeight:700, color:C.textLight4, fontFamily:FM, marginBottom:10, paddingLeft:20 }}>{cp.date}</div>
-                      <div style={{ position:"relative" }}>
-                        {cp.photo?.src ? (
-                          <>
-                            <img src={cp.photo.src} alt={cp.label} onClick={() => setFullscreen(cp.photo.src)}
-                              style={{ width:140, height:140, objectFit:"cover", border:`3px solid ${C.ink}`, display:"block", cursor:"pointer", boxShadow:HS(4) }}
-                            />
-                            <div style={{ position:"absolute", bottom:8, left:8, background:"rgba(0,0,0,0.7)", border:`2px solid ${C.lime}`, padding:"3px 8px", fontSize:10, fontWeight:900, fontFamily:FB, color:C.lime }}>{cp.photo.m.toUpperCase()}</div>
-                            <div onClick={() => setFullscreen(cp.photo.src)} style={{ position:"absolute", bottom:8, right:8, background:C.lime, border:`2px solid ${C.ink}`, padding:"3px 6px", fontSize:11, cursor:"pointer" }}>⛶</div>
-                          </>
-                        ) : (
-                          <div style={{ width:140, height:140, background:C.cardMid, border:`3px dashed ${C.ink}`, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:6 }}>
-                            <span style={{ fontSize:26 }}>📷</span>
-                            <span style={{ fontSize:10, fontWeight:800, color:C.textLight3, fontFamily:FB }}>NO PHOTO</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {withPhotos.length >= 2 && (
-                <WhiteCard>
-                  <Label style={{ marginBottom:14 }}>Side-by-Side Compare</Label>
-                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12 }}>
-                    {[0, 1].map(slot => {
-                      const safeIdx = Math.max(0, Math.min(compareIdx[slot], withPhotos.length-1));
-                      const photo = withPhotos[safeIdx];
-                      return (
-                        <div key={slot}>
-                          <select
-                            value={safeIdx}
-                            onChange={e => { const v = parseInt(e.target.value); setCompareIdx(prev => slot === 0 ? [v, prev[1]] : [prev[0], v]); }}
-                            style={{ width:"100%", background:C.cardWhite, border:`3px solid ${C.ink}`, padding:"8px 10px", fontSize:12, fontWeight:700, fontFamily:FB, color:C.textLight1, outline:"none", marginBottom:10, cursor:"pointer" }}
-                          >
-                            {withPhotos.map((p, i) => <option key={i} value={i}>{p.m}</option>)}
-                          </select>
-                          {photo?.src && (
-                            <div onClick={() => setFullscreen(photo.src)} style={{ cursor:"pointer", position:"relative" }}>
-                              <img src={photo.src} alt={photo.m} style={{ width:"100%", aspectRatio:"1", objectFit:"cover", border:`3px solid ${C.ink}`, display:"block" }} />
-                              <div style={{ position:"absolute", bottom:6, left:6, background:C.lime, border:`2px solid ${C.ink}`, padding:"3px 8px", fontSize:10, fontWeight:900, fontFamily:FB }}>{photo.m.toUpperCase()}</div>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </WhiteCard>
-              )}
-            </>
-          )}
-        </>
-      )}
-
-      {fullscreen && (
-        <div onClick={() => setFullscreen(null)} style={{
-          position:"fixed", inset:0, background:"rgba(0,0,0,0.93)", zIndex:500, display:"flex", alignItems:"center", justifyContent:"center",
-        }}>
-          <button onClick={e => { e.stopPropagation(); setFullscreen(null); }} style={{
-            position:"absolute", top:20, right:20, background:C.lime,
-            border:`3px solid ${C.ink}`, width:44, height:44, fontSize:20, fontWeight:900, cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center",
-          }}>✕</button>
-          <img src={fullscreen} alt="Fullscreen preview" style={{ maxWidth:"95vw", maxHeight:"90vh", objectFit:"contain", border:`3px solid ${C.ink}`, boxShadow:HS(8) }} />
-        </div>
-      )}
     </div>
   );
 }
