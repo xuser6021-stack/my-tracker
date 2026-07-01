@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { LineChart, Line, BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from "recharts";
 
-const CHALLENGE_START = new Date("2025-07-01");
+const CHALLENGE_START = new Date("2026-07-01");
 const TOTAL_DAYS = 184;
 const MONTHS = ["Jul","Aug","Sep","Oct","Nov","Dec"];
 const MONTH_NUMS = [6,7,8,9,10,11];
